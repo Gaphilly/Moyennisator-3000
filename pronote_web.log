@@ -1,0 +1,36 @@
+2025-08-28 18:16:56,291 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.86.27:5000
+2025-08-28 18:16:56,294 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-28 18:16:56,298 - INFO -  * Restarting with stat
+2025-08-28 18:16:57,335 - WARNING -  * Debugger is active!
+2025-08-28 18:16:57,340 - INFO -  * Debugger PIN: 160-770-479
+2025-08-28 18:17:12,855 - INFO - 127.0.0.1 - - [28/Aug/2025 18:17:12] "GET / HTTP/1.1" 200 -
+2025-08-28 18:17:12,861 - INFO - 192.168.86.27 - - [28/Aug/2025 18:17:12] "GET / HTTP/1.1" 200 -
+2025-08-28 18:17:14,043 - INFO - 127.0.0.1 - - [28/Aug/2025 18:17:14] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-28 18:17:14,044 - INFO - 192.168.86.27 - - [28/Aug/2025 18:17:14] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-28 18:17:29,288 - INFO - 127.0.0.1 - - [28/Aug/2025 18:17:29] "[32mGET /set_language/en HTTP/1.1[0m" 302 -
+2025-08-28 18:17:29,300 - INFO - 127.0.0.1 - - [28/Aug/2025 18:17:29] "GET / HTTP/1.1" 200 -
+2025-08-28 18:17:30,570 - INFO - 127.0.0.1 - - [28/Aug/2025 18:17:30] "[32mGET /set_language/fr HTTP/1.1[0m" 302 -
+2025-08-28 18:17:30,581 - INFO - 127.0.0.1 - - [28/Aug/2025 18:17:30] "GET / HTTP/1.1" 200 -
+2025-08-28 18:17:32,751 - INFO - 127.0.0.1 - - [28/Aug/2025 18:17:32] "[32mGET /set_language/es HTTP/1.1[0m" 302 -
+2025-08-28 18:17:32,765 - INFO - 127.0.0.1 - - [28/Aug/2025 18:17:32] "GET / HTTP/1.1" 200 -
+2025-08-28 18:17:34,202 - INFO - 127.0.0.1 - - [28/Aug/2025 18:17:34] "[32mGET /set_language/fr HTTP/1.1[0m" 302 -
+2025-08-28 18:17:34,212 - INFO - 127.0.0.1 - - [28/Aug/2025 18:17:34] "GET / HTTP/1.1" 200 -
+2025-08-28 18:18:42,736 - INFO - 127.0.0.1 - - [28/Aug/2025 18:18:42] "[32mGET /set_language/fr HTTP/1.1[0m" 302 -
+2025-08-28 18:18:42,752 - INFO - 127.0.0.1 - - [28/Aug/2025 18:18:42] "GET / HTTP/1.1" 200 -
+2025-08-28 18:19:00,443 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.86.27:5000
+2025-08-28 18:19:00,443 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-28 18:19:00,444 - INFO -  * Restarting with stat
+2025-08-28 18:19:01,378 - WARNING -  * Debugger is active!
+2025-08-28 18:19:01,380 - INFO -  * Debugger PIN: 160-770-479
+2025-08-28 18:19:03,603 - INFO - 127.0.0.1 - - [28/Aug/2025 18:19:03] "GET / HTTP/1.1" 200 -
+2025-08-28 18:20:42,106 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.86.27:5000
+2025-08-28 18:20:42,106 - INFO - [33mPress CTRL+C to quit[0m

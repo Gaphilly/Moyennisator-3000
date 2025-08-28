@@ -123,27 +123,27 @@ msgstr "Ce que vous obtiendrez :"
 
 #: templates/index.html:89
 msgid "Individual"
-msgstr "Individuel"
+msgstr "Évaluations"
 
 #: templates/index.html:89
 msgid "Evaluations"
-msgstr "Évaluations"
+msgstr "Individuelles"
 
 #: templates/index.html:93 templates/results.html:115
 msgid "Subject"
-msgstr "Matière"
+msgstr "Moyennes par"
 
 #: templates/index.html:93
 msgid "Averages"
-msgstr "Moyennes"
+msgstr "Matière"
 
 #: templates/index.html:97
 msgid "Brevet"
-msgstr "Brevet"
+msgstr "Statistiques pour"
 
 #: templates/index.html:97
 msgid "Statistics"
-msgstr "Statistiques"
+msgstr "le Brevet"
 
 #: templates/results.html:3
 msgid "Results"
