@@ -40,6 +40,8 @@ logger = logging.getLogger(__name__)
 # Flask app configuration
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-change-in-production')
+app.config['WTF_CSRF_ENABLED'] = True
+app.config['WTF_CSRF_TIME_LIMIT'] = None
 
 class LoginForm(FlaskForm):
     """Form for Pronote login credentials."""
@@ -277,26 +279,35 @@ def index():
     """Main page with login form."""
     form = LoginForm()
     
-    if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
+    if request.method == 'POST':
+        logger.info(f"Form validation: {form.validate()}")
+        logger.info(f"Form errors: {form.errors}")
         
-        # Connect to Pronote
-        success, message = analyzer.connect_to_pronote(str(username), str(password))
-        
-        if not success:
-            flash(f'Connection failed: {message}', 'error')
-            return render_template('index.html', form=form)
-        
-        # Fetch evaluations
-        success, message = analyzer.fetch_evaluations()
-        
-        if not success:
-            flash(f'Error fetching data: {message}', 'error')
-            return render_template('index.html', form=form)
-        
-        flash(f'Success: {message}', 'success')
-        return redirect(url_for('results'))
+        if form.validate_on_submit():
+            username = form.username.data
+            password = form.password.data
+            
+            logger.info(f"Processing login for user: {username}")
+            
+            # Connect to Pronote
+            success, message = analyzer.connect_to_pronote(str(username), str(password))
+            
+            if not success:
+                flash(f'Connection failed: {message}', 'error')
+                return render_template('index.html', form=form)
+            
+            # Fetch evaluations
+            success, message = analyzer.fetch_evaluations()
+            
+            if not success:
+                flash(f'Error fetching data: {message}', 'error')
+                return render_template('index.html', form=form)
+            
+            flash(f'Success: {message}', 'success')
+            return redirect(url_for('results'))
+        else:
+            # Form validation failed
+            flash('Please check your input and try again.', 'error')
     
     return render_template('index.html', form=form)
 
