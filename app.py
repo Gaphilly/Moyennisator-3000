@@ -40,8 +40,7 @@ logger = logging.getLogger(__name__)
 # Flask app configuration
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-change-in-production')
-app.config['WTF_CSRF_ENABLED'] = True
-app.config['WTF_CSRF_TIME_LIMIT'] = None
+app.config['WTF_CSRF_ENABLED'] = False  # Disabled for simplicity
 
 class LoginForm(FlaskForm):
     """Form for Pronote login credentials."""
