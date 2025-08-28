@@ -1,0 +1,41 @@
+modules = ["python-3.11"]
+[agent]
+expertMode = true
+
+[nix]
+channel = "stable-25_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Pronote Analyzer"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "pronote_analyzer"
+
+[[workflows.workflow]]
+name = "Pronote Analyzer"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install pronotepy python-dotenv && python pronote_analyzer.py"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[[workflows.workflow]]
+name = "pronote_analyzer"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install pronotepy python-dotenv && python pronote_analyzer.py"
