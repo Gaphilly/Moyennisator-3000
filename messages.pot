@@ -1,0 +1,210 @@
+# Translations template for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-08-28 21:25+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: app.py:314
+msgid "Excellent (Mention Très Bien possible)"
+msgstr ""
+
+#: app.py:316
+msgid "Good (Mention Bien possible)"
+msgstr ""
+
+#: app.py:318
+msgid "Satisfactory (Mention Assez Bien possible)"
+msgstr ""
+
+#: app.py:320
+msgid "Pass level"
+msgstr ""
+
+#: app.py:322
+msgid "Below pass level"
+msgstr ""
+
+#: app.py:346
+#, python-format
+msgid "Connection failed: %(message)s"
+msgstr ""
+
+#: app.py:353
+#, python-format
+msgid "Error fetching data: %(message)s"
+msgstr ""
+
+#: app.py:356
+#, python-format
+msgid "Success: %(message)s"
+msgstr ""
+
+#: app.py:360
+msgid "Please check your input and try again."
+msgstr ""
+
+#: app.py:375
+msgid "No data available. Please login first."
+msgstr ""
+
+#: templates/base.html:6 templates/index.html:3 templates/index.html:10
+#: templates/results.html:3
+msgid "Pronote Grade Analyzer"
+msgstr ""
+
+#: templates/index.html:3
+msgid "Login"
+msgstr ""
+
+#: templates/index.html:11
+msgid "Analyze your academic performance with Brevet statistics"
+msgstr ""
+
+#: templates/index.html:29
+msgid "Disclaimer:"
+msgstr ""
+
+#: templates/index.html:29
+msgid ""
+"The data and statistics shown are estimations based on available "
+"evaluations and may not be entirely accurate. Results should be used for "
+"reference purposes only."
+msgstr ""
+
+#: templates/index.html:36
+msgid "Connected to:"
+msgstr ""
+
+#: templates/index.html:37
+msgid "Enter your Pronote credentials to analyze your grades"
+msgstr ""
+
+#: templates/index.html:76
+msgid "Your credentials are secure and not stored"
+msgstr ""
+
+#: templates/index.html:85
+msgid "What you'll get:"
+msgstr ""
+
+#: templates/index.html:89
+msgid "Individual"
+msgstr ""
+
+#: templates/index.html:89
+msgid "Evaluations"
+msgstr ""
+
+#: templates/index.html:93 templates/results.html:115
+msgid "Subject"
+msgstr ""
+
+#: templates/index.html:93
+msgid "Averages"
+msgstr ""
+
+#: templates/index.html:97
+msgid "Brevet"
+msgstr ""
+
+#: templates/index.html:97
+msgid "Statistics"
+msgstr ""
+
+#: templates/results.html:3
+msgid "Results"
+msgstr ""
+
+#: templates/results.html:7
+msgid "Back to Login"
+msgstr ""
+
+#: templates/results.html:14
+msgid "Important Disclaimer:"
+msgstr ""
+
+#: templates/results.html:14
+msgid ""
+"All statistics and calculations displayed below are estimations based on "
+"available evaluations and may not be entirely accurate. These results "
+"should be used for reference purposes only and do not represent official "
+"academic records."
+msgstr ""
+
+#: templates/results.html:23
+msgid "Grade Analysis Results"
+msgstr ""
+
+#: templates/results.html:24
+msgid "Complete analysis of your academic performance"
+msgstr ""
+
+#: templates/results.html:35
+msgid "Average Points (/50)"
+msgstr ""
+
+#: templates/results.html:41
+msgid "Average (/20)"
+msgstr ""
+
+#: templates/results.html:47
+msgid "Socle Score (/400)"
+msgstr ""
+
+#: templates/results.html:53
+msgid "Total Evaluations"
+msgstr ""
+
+#: templates/results.html:63
+msgid "Performance Level"
+msgstr ""
+
+#: templates/results.html:75
+msgid "Subject Averages (Weighted)"
+msgstr ""
+
+#: templates/results.html:108
+msgid "Individual Evaluations"
+msgstr ""
+
+#: templates/results.html:116
+msgid "Evaluation"
+msgstr ""
+
+#: templates/results.html:117
+msgid "Date"
+msgstr ""
+
+#: templates/results.html:118
+msgid "Coefficient"
+msgstr ""
+
+#: templates/results.html:119
+msgid "Grades"
+msgstr ""
+
+#: templates/results.html:120
+msgid "Avg Points"
+msgstr ""
+
+#: templates/results.html:148
+msgid "No grades"
+msgstr ""
+
+#: templates/results.html:169
+msgid "Grade Point System"
+msgstr ""
+

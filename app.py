@@ -10,7 +10,8 @@ import logging
 from typing import List, Dict, Optional, Tuple
 from collections import defaultdict
 
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session
+from flask_babel import Babel, gettext, ngettext, lazy_gettext, get_locale
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length
@@ -41,6 +42,35 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-change-in-production')
 app.config['WTF_CSRF_ENABLED'] = False  # Disabled for simplicity
+
+# Babel configuration
+app.config['LANGUAGES'] = {
+    'fr': 'Français',
+    'en': 'English', 
+    'es': 'Español'
+}
+app.config['BABEL_DEFAULT_LOCALE'] = 'fr'
+app.config['BABEL_DEFAULT_TIMEZONE'] = 'UTC'
+
+def get_locale():
+    # 1. Check if language is provided in URL parameter
+    if 'language' in request.args:
+        language = request.args['language']
+        if language in app.config['LANGUAGES'].keys():
+            session['language'] = language
+            return language
+    
+    # 2. Check if language is stored in session
+    if 'language' in session:
+        language = session['language']
+        if language in app.config['LANGUAGES'].keys():
+            return language
+    
+    # 3. Fall back to browser's best match or default
+    return request.accept_languages.best_match(app.config['LANGUAGES'].keys()) or app.config['BABEL_DEFAULT_LOCALE']
+
+babel = Babel()
+babel.init_app(app, default_locale='fr', locale_selector=get_locale)
 
 class LoginForm(FlaskForm):
     """Form for Pronote login credentials."""
@@ -281,15 +311,15 @@ class PronoteAnalyzer:
     def get_performance_level(self, socle_score: float) -> str:
         """Get performance level description based on socle score."""
         if socle_score >= 350:
-            return "Excellent (Mention Très Bien possible)"
+            return gettext("Excellent (Mention Très Bien possible)")
         elif socle_score >= 280:
-            return "Good (Mention Bien possible)"
+            return gettext("Good (Mention Bien possible)")
         elif socle_score >= 240:
-            return "Satisfactory (Mention Assez Bien possible)"
+            return gettext("Satisfactory (Mention Assez Bien possible)")
         elif socle_score >= 200:
-            return "Pass level"
+            return gettext("Pass level")
         else:
-            return "Below pass level"
+            return gettext("Below pass level")
 
 # Global analyzer instance
 analyzer = PronoteAnalyzer()
@@ -313,29 +343,36 @@ def index():
             success, message = analyzer.connect_to_pronote(str(username), str(password))
             
             if not success:
-                flash(f'Connection failed: {message}', 'error')
+                flash(gettext('Connection failed: %(message)s', message=message), 'error')
                 return render_template('index.html', form=form)
             
             # Fetch evaluations
             success, message = analyzer.fetch_evaluations()
             
             if not success:
-                flash(f'Error fetching data: {message}', 'error')
+                flash(gettext('Error fetching data: %(message)s', message=message), 'error')
                 return render_template('index.html', form=form)
             
-            flash(f'Success: {message}', 'success')
+            flash(gettext('Success: %(message)s', message=message), 'success')
             return redirect(url_for('results'))
         else:
             # Form validation failed
-            flash('Please check your input and try again.', 'error')
+            flash(gettext('Please check your input and try again.'), 'error')
     
     return render_template('index.html', form=form)
+
+@app.route('/set_language/<language>')
+def set_language(language=None):
+    """Set the language for the session."""
+    if language in app.config['LANGUAGES'].keys():
+        session['language'] = language
+    return redirect(request.referrer or url_for('index'))
 
 @app.route('/results')
 def results():
     """Results page showing grade analysis."""
     if not analyzer.evaluations:
-        flash('No data available. Please login first.', 'warning')
+        flash(gettext('No data available. Please login first.'), 'warning')
         return redirect(url_for('index'))
     
     # Calculate statistics

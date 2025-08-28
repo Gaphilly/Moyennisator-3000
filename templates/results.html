@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Results - Pronote Grade Analyzer{% endblock %}
+{% block title %}{{ _('Results') }} - {{ _('Pronote Grade Analyzer') }}{% endblock %}
 
 {% block content %}
 <a href="{{ url_for('index') }}" class="btn btn-outline-light back-btn">
-    <i class="fas fa-arrow-left me-2"></i>Back to Login
+    <i class="fas fa-arrow-left me-2"></i>{{ _('Back to Login') }}
 </a>
 
 <div class="row">
     <div class="col-12">
         <div class="alert alert-warning" role="alert">
             <i class="fas fa-exclamation-triangle me-2"></i>
-            <strong>Important Disclaimer:</strong> All statistics and calculations displayed below are estimations based on available evaluations and may not be entirely accurate. These results should be used for reference purposes only and do not represent official academic records.
+            <strong>{{ _('Important Disclaimer:') }}</strong> {{ _('All statistics and calculations displayed below are estimations based on available evaluations and may not be entirely accurate. These results should be used for reference purposes only and do not represent official academic records.') }}
         </div>
     </div>
 </div>
@@ -20,8 +20,8 @@
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header text-center">
-                <h2><i class="fas fa-chart-line me-2"></i>Grade Analysis Results</h2>
-                <p class="mb-0">Complete analysis of your academic performance</p>
+                <h2><i class="fas fa-chart-line me-2"></i>{{ _('Grade Analysis Results') }}</h2>
+                <p class="mb-0">{{ _('Complete analysis of your academic performance') }}</p>
             </div>
         </div>
     </div>
@@ -32,25 +32,25 @@
     <div class="col-md-3 col-sm-6 mb-3">
         <div class="stats-card">
             <h3>{{ brevet_stats.moyenne_points }}</h3>
-            <p>Average Points (/50)</p>
+            <p>{{ _('Average Points (/50)') }}</p>
         </div>
     </div>
     <div class="col-md-3 col-sm-6 mb-3">
         <div class="stats-card">
             <h3>{{ brevet_stats.moyenne_sur_20 }}</h3>
-            <p>Average (/20)</p>
+            <p>{{ _('Average (/20)') }}</p>
         </div>
     </div>
     <div class="col-md-3 col-sm-6 mb-3">
         <div class="stats-card">
             <h3>{{ brevet_stats.socle_sur_400 }}</h3>
-            <p>Socle Score (/400)</p>
+            <p>{{ _('Socle Score (/400)') }}</p>
         </div>
     </div>
     <div class="col-md-3 col-sm-6 mb-3">
         <div class="stats-card">
             <h3>{{ total_evaluations }}</h3>
-            <p>Total Evaluations</p>
+            <p>{{ _('Total Evaluations') }}</p>
         </div>
     </div>
 </div>
@@ -60,7 +60,7 @@
     <div class="col-12">
         <div class="card performance-{% if brevet_stats.socle_sur_400 >= 350 %}excellent{% elif brevet_stats.socle_sur_400 >= 280 %}good{% elif brevet_stats.socle_sur_400 >= 240 %}satisfactory{% elif brevet_stats.socle_sur_400 >= 200 %}pass{% else %}below{% endif %}">
             <div class="card-body text-center">
-                <h3><i class="fas fa-medal me-2"></i>Performance Level</h3>
+                <h3><i class="fas fa-medal me-2"></i>{{ _('Performance Level') }}</h3>
                 <h2>{{ performance_level }}</h2>
             </div>
         </div>
@@ -72,7 +72,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h4><i class="fas fa-book me-2"></i>Subject Averages (Weighted)</h4>
+                <h4><i class="fas fa-book me-2"></i>{{ _('Subject Averages (Weighted)') }}</h4>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -105,19 +105,19 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h4><i class="fas fa-list-alt me-2"></i>Individual Evaluations</h4>
+                <h4><i class="fas fa-list-alt me-2"></i>{{ _('Individual Evaluations') }}</h4>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th><i class="fas fa-book me-1"></i>Subject</th>
-                                <th><i class="fas fa-file-alt me-1"></i>Evaluation</th>
-                                <th><i class="fas fa-calendar me-1"></i>Date</th>
-                                <th><i class="fas fa-weight me-1"></i>Coefficient</th>
-                                <th><i class="fas fa-star me-1"></i>Grades</th>
-                                <th><i class="fas fa-calculator me-1"></i>Avg Points</th>
+                                <th><i class="fas fa-book me-1"></i>{{ _('Subject') }}</th>
+                                <th><i class="fas fa-file-alt me-1"></i>{{ _('Evaluation') }}</th>
+                                <th><i class="fas fa-calendar me-1"></i>{{ _('Date') }}</th>
+                                <th><i class="fas fa-weight me-1"></i>{{ _('Coefficient') }}</th>
+                                <th><i class="fas fa-star me-1"></i>{{ _('Grades') }}</th>
+                                <th><i class="fas fa-calculator me-1"></i>{{ _('Avg Points') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -145,7 +145,7 @@
                                             </span>
                                         {% endfor %}
                                         {% if not evaluation.grades %}
-                                            <small class="text-muted">No grades</small>
+                                            <small class="text-muted">{{ _('No grades') }}</small>
                                         {% endif %}
                                     </td>
                                     <td>
@@ -166,7 +166,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body text-center">
-                <h6><i class="fas fa-info-circle me-2"></i>Grade Point System</h6>
+                <h6><i class="fas fa-info-circle me-2"></i>{{ _('Grade Point System') }}</h6>
                 <p class="mb-0">
                     <span class="grade-badge grade-v-plus">V+ = 50 pts</span>
                     <span class="grade-badge grade-v">V = 40 pts</span>

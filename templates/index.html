@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Login - Pronote Grade Analyzer{% endblock %}
+{% block title %}{{ _('Login') }} - {{ _('Pronote Grade Analyzer') }}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
         <div class="card">
             <div class="card-header text-center">
-                <h2><i class="fas fa-graduation-cap me-2"></i>Pronote Grade Analyzer</h2>
-                <p class="mb-0">Analyze your academic performance with Brevet statistics</p>
+                <h2><i class="fas fa-graduation-cap me-2"></i>{{ _('Pronote Grade Analyzer') }}</h2>
+                <p class="mb-0">{{ _('Analyze your academic performance with Brevet statistics') }}</p>
             </div>
             <div class="card-body p-4">
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -26,15 +26,15 @@
                 <div class="mb-3">
                     <div class="alert alert-warning" role="alert">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        <strong>Disclaimer:</strong> The data and statistics shown are estimations based on available evaluations and may not be entirely accurate. Results should be used for reference purposes only.
+                        <strong>{{ _('Disclaimer:') }}</strong> {{ _('The data and statistics shown are estimations based on available evaluations and may not be entirely accurate. Results should be used for reference purposes only.') }}
                     </div>
                 </div>
                 
                 <div class="mb-4">
                     <div class="alert alert-info" role="alert">
                         <i class="fas fa-info-circle me-2"></i>
-                        <strong>Connected to:</strong> 4170004n.index-education.net
-                        <br><small>Enter your Pronote credentials to analyze your grades</small>
+                        <strong>{{ _('Connected to:') }}</strong> 4170004n.index-education.net
+                        <br><small>{{ _('Enter your Pronote credentials to analyze your grades') }}</small>
                     </div>
                 </div>
                 
@@ -73,7 +73,7 @@
                 <div class="text-center mt-4">
                     <small class="text-muted">
                         <i class="fas fa-shield-alt me-1"></i>
-                        Your credentials are secure and not stored
+                        {{ _('Your credentials are secure and not stored') }}
                     </small>
                 </div>
             </div>
@@ -82,19 +82,19 @@
         <div class="text-center mt-4">
             <div class="card">
                 <div class="card-body">
-                    <h5><i class="fas fa-chart-line me-2 text-primary"></i>What you'll get:</h5>
+                    <h5><i class="fas fa-chart-line me-2 text-primary"></i>{{ _('What you\'ll get:') }}</h5>
                     <div class="row text-center mt-3">
                         <div class="col-4">
                             <i class="fas fa-list-alt fa-2x text-primary mb-2"></i>
-                            <p><small>Individual<br>Evaluations</small></p>
+                            <p><small>{{ _('Individual') }}<br>{{ _('Evaluations') }}</small></p>
                         </div>
                         <div class="col-4">
                             <i class="fas fa-calculator fa-2x text-success mb-2"></i>
-                            <p><small>Subject<br>Averages</small></p>
+                            <p><small>{{ _('Subject') }}<br>{{ _('Averages') }}</small></p>
                         </div>
                         <div class="col-4">
                             <i class="fas fa-trophy fa-2x text-warning mb-2"></i>
-                            <p><small>Brevet<br>Statistics</small></p>
+                            <p><small>{{ _('Brevet') }}<br>{{ _('Statistics') }}</small></p>
                         </div>
                     </div>
                 </div>
