@@ -96,66 +96,66 @@ msgstr "Analysez vos performances académiques avec les statistiques du Brevet"
 
 #: templates/index.html:29
 msgid "Disclaimer:"
-msgstr "Avertissement:"
+msgstr ""
 
 #: templates/index.html:29
 msgid ""
 "The data and statistics shown are estimations based on available "
 "evaluations and may not be entirely accurate. Results should be used for "
 "reference purposes only."
-msgstr "Avertissement:"
+msgstr "Les données et statistiques affichées sont des estimations basées sur les évaluations disponibles et peuvent ne pas être entièrement précises. Les résultats doivent être utilisés à des fins de référence uniquement."
 
 #: templates/index.html:36
 msgid "Connected to:"
-msgstr "Avertissement:"
+msgstr "Connecté à :"
 
 #: templates/index.html:37
 msgid "Enter your Pronote credentials to analyze your grades"
-msgstr "Avertissement:"
+msgstr "Entrez vos identifiants Pronote pour analyser vos notes"
 
 #: templates/index.html:76
 msgid "Your credentials are secure and not stored"
-msgstr "Avertissement:"
+msgstr "Vos identifiants sont sécurisés et ne sont pas stockés"
 
 #: templates/index.html:85
 msgid "What you'll get:"
-msgstr "Avertissement:"
+msgstr "Ce que vous obtiendrez :"
 
 #: templates/index.html:89
 msgid "Individual"
-msgstr "Avertissement:"
+msgstr "Individuel"
 
 #: templates/index.html:89
 msgid "Evaluations"
-msgstr "Avertissement:"
+msgstr "Évaluations"
 
 #: templates/index.html:93 templates/results.html:115
 msgid "Subject"
-msgstr "Avertissement:"
+msgstr "Matière"
 
 #: templates/index.html:93
 msgid "Averages"
-msgstr "Avertissement:"
+msgstr "Moyennes"
 
 #: templates/index.html:97
 msgid "Brevet"
-msgstr "Avertissement:"
+msgstr "Brevet"
 
 #: templates/index.html:97
 msgid "Statistics"
-msgstr "Avertissement:"
+msgstr "Statistiques"
 
 #: templates/results.html:3
 msgid "Results"
-msgstr "Avertissement:"
+msgstr "Résultats"
 
 #: templates/results.html:7
 msgid "Back to Login"
-msgstr "Avertissement:"
+msgstr "Retour à la connexion"
 
 #: templates/results.html:14
 msgid "Important Disclaimer:"
-msgstr "Avertissement:"
+msgstr "Avertissement important :"
 
 #: templates/results.html:14
 msgid ""
@@ -163,69 +163,69 @@ msgid ""
 "available evaluations and may not be entirely accurate. These results "
 "should be used for reference purposes only and do not represent official "
 "academic records."
-msgstr "Avertissement:"
+msgstr "Toutes les statistiques et calculs affichés ci-dessous sont des estimations basées sur les évaluations disponibles et peuvent ne pas être entièrement précis. Ces résultats doivent être utilisés à des fins de référence uniquement et ne représentent pas les dossiers académiques officiels."
 
 #: templates/results.html:23
 msgid "Grade Analysis Results"
-msgstr "Avertissement:"
+msgstr "Résultats d'analyse des notes"
 
 #: templates/results.html:24
 msgid "Complete analysis of your academic performance"
-msgstr "Avertissement:"
+msgstr "Analyse complète de vos performances académiques"
 
 #: templates/results.html:35
 msgid "Average Points (/50)"
-msgstr "Avertissement:"
+msgstr "Points moyens (/50)"
 
 #: templates/results.html:41
 msgid "Average (/20)"
-msgstr "Avertissement:"
+msgstr "Moyenne (/20)"
 
 #: templates/results.html:47
 msgid "Socle Score (/400)"
-msgstr "Avertissement:"
+msgstr ""
 
 #: templates/results.html:53
 msgid "Total Evaluations"
-msgstr "Avertissement:"
+msgstr "Total des évaluations"
 
 #: templates/results.html:63
 msgid "Performance Level"
-msgstr "Avertissement:"
+msgstr "Niveau de performance"
 
 #: templates/results.html:75
 msgid "Subject Averages (Weighted)"
-msgstr "Avertissement:"
+msgstr ""
 
 #: templates/results.html:108
 msgid "Individual Evaluations"
-msgstr "Avertissement:"
+msgstr ""
 
 #: templates/results.html:116
 msgid "Evaluation"
-msgstr "Avertissement:"
+msgstr ""
 
 #: templates/results.html:117
 msgid "Date"
-msgstr "Avertissement:"
+msgstr ""
 
 #: templates/results.html:118
 msgid "Coefficient"
-msgstr "Avertissement:"
+msgstr ""
 
 #: templates/results.html:119
 msgid "Grades"
-msgstr "Avertissement:"
+msgstr ""
 
 #: templates/results.html:120
 msgid "Avg Points"
-msgstr "Avertissement:"
+msgstr ""
 
 #: templates/results.html:148
 msgid "No grades"
-msgstr "Avertissement:"
+msgstr ""
 
 #: templates/results.html:169
 msgid "Grade Point System"
-msgstr "Avertissement:"
+msgstr ""
 

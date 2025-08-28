@@ -33,11 +33,11 @@ msgstr ""
 
 #: app.py:86
 msgid "Enter your Pronote username"
-msgstr ""
+msgstr "Ingresa tu nombre de usuario de Pronote"
 
 #: app.py:87
 msgid "Enter your Pronote password"
-msgstr ""
+msgstr "Ingresa tu contraseña de Pronote"
 
 #: app.py:324
 msgid "Excellent (Mention Très Bien possible)"
@@ -62,25 +62,25 @@ msgstr "Por debajo del nivel de aprobado"
 #: app.py:356
 #, python-format
 msgid "Connection failed: %(message)s"
-msgstr ""
+msgstr "Error de conexión: %(message)s"
 
 #: app.py:363
 #, python-format
 msgid "Error fetching data: %(message)s"
-msgstr ""
+msgstr "Error obteniendo datos: %(message)s"
 
 #: app.py:366
 #, python-format
 msgid "Success: %(message)s"
-msgstr ""
+msgstr "Éxito: %(message)s"
 
 #: app.py:370
 msgid "Please check your input and try again."
-msgstr ""
+msgstr "Por favor verifica tu entrada e inténtalo de nuevo."
 
 #: app.py:385
 msgid "No data available. Please login first."
-msgstr ""
+msgstr "No hay datos disponibles. Por favor inicia sesión primero."
 
 #: templates/base.html:6 templates/index.html:3 templates/index.html:10
 #: templates/results.html:3
@@ -97,50 +97,50 @@ msgstr "Analiza tu rendimiento académico con estadísticas del Brevet"
 
 #: templates/index.html:29
 msgid "Disclaimer:"
-msgstr ""
+msgstr "Aviso:"
 
 #: templates/index.html:29
 msgid ""
 "The data and statistics shown are estimations based on available "
 "evaluations and may not be entirely accurate. Results should be used for "
 "reference purposes only."
-msgstr ""
+msgstr "Los datos y estadísticas mostrados son estimaciones basadas en evaluaciones disponibles y pueden no ser completamente precisos. Los resultados deben usarse solo como referencia."
 
 #: templates/index.html:36
 msgid "Connected to:"
-msgstr ""
+msgstr "Conectado a:"
 
 #: templates/index.html:37
 msgid "Enter your Pronote credentials to analyze your grades"
-msgstr ""
+msgstr "Ingresa tus credenciales de Pronote para analizar tus calificaciones"
 
 #: templates/index.html:76
 msgid "Your credentials are secure and not stored"
-msgstr ""
+msgstr "Tus credenciales son seguras y no se almacenan"
 
 #: templates/index.html:85
 msgid "What you'll get:"
-msgstr ""
+msgstr "Lo que obtendrás:"
 
 #: templates/index.html:89
 msgid "Individual"
-msgstr ""
+msgstr "Individual"
 
 #: templates/index.html:89
 msgid "Evaluations"
-msgstr ""
+msgstr "Evaluaciones"
 
 #: templates/index.html:93 templates/results.html:115
 msgid "Subject"
-msgstr ""
+msgstr "Materia"
 
 #: templates/index.html:93
 msgid "Averages"
-msgstr ""
+msgstr "Promedios"
 
 #: templates/index.html:97
 msgid "Brevet"
-msgstr ""
+msgstr "Brevet"
 
 #: templates/index.html:97
 msgid "Statistics"
