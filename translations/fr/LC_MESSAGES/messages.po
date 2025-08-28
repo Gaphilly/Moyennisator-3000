@@ -84,7 +84,7 @@ msgstr "Aucune donnée disponible. Veuillez vous connecter d'abord."
 #: templates/base.html:6 templates/index.html:3 templates/index.html:10
 #: templates/results.html:3
 msgid "Pronote Grade Analyzer"
-msgstr "Analyseur de Notes Pronote"
+msgstr "Moyennisator 3000"
 
 #: templates/index.html:3
 msgid "Login"

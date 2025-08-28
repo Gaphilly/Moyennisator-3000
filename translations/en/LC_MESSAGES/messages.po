@@ -85,7 +85,7 @@ msgstr "No data available. Please login first."
 #: templates/base.html:6 templates/index.html:3 templates/index.html:10
 #: templates/results.html:3
 msgid "Pronote Grade Analyzer"
-msgstr "Pronote Grade Analyzer"
+msgstr "Moyennisator 3000"
 
 #: templates/index.html:3
 msgid "Login"

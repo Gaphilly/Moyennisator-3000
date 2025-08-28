@@ -85,7 +85,7 @@ msgstr "No hay datos disponibles. Por favor inicia sesión primero."
 #: templates/base.html:6 templates/index.html:3 templates/index.html:10
 #: templates/results.html:3
 msgid "Pronote Grade Analyzer"
-msgstr "Analizador de Calificaciones Pronote"
+msgstr "Moyennisator 3000"
 
 #: templates/index.html:3
 msgid "Login"
