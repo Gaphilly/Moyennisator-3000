@@ -19,7 +19,7 @@ args = "Pronote Analyzer"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "pronote_analyzer"
+args = "Web App"
 
 [[workflows.workflow]]
 name = "Pronote Analyzer"
@@ -33,9 +33,17 @@ args = "pip install pronotepy python-dotenv && python pronote_analyzer.py"
 outputType = "console"
 
 [[workflows.workflow]]
-name = "pronote_analyzer"
+name = "Web App"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "pip install pronotepy python-dotenv && python pronote_analyzer.py"
+args = "python app.py"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[ports]]
+localPort = 5000
+externalPort = 80

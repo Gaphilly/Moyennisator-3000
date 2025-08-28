@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}Results - Pronote Grade Analyzer{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('index') }}" class="btn btn-outline-light back-btn">
+    <i class="fas fa-arrow-left me-2"></i>Back to Login
+</a>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header text-center">
+                <h2><i class="fas fa-chart-line me-2"></i>Grade Analysis Results</h2>
+                <p class="mb-0">Complete analysis of your academic performance</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Brevet Statistics Overview -->
+<div class="row mb-4">
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="stats-card">
+            <h3>{{ brevet_stats.moyenne_points }}</h3>
+            <p>Average Points (/50)</p>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="stats-card">
+            <h3>{{ brevet_stats.moyenne_sur_20 }}</h3>
+            <p>Average (/20)</p>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="stats-card">
+            <h3>{{ brevet_stats.socle_sur_400 }}</h3>
+            <p>Socle Score (/400)</p>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="stats-card">
+            <h3>{{ total_evaluations }}</h3>
+            <p>Total Evaluations</p>
+        </div>
+    </div>
+</div>
+
+<!-- Performance Level -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card performance-{% if brevet_stats.socle_sur_400 >= 350 %}excellent{% elif brevet_stats.socle_sur_400 >= 280 %}good{% elif brevet_stats.socle_sur_400 >= 240 %}satisfactory{% elif brevet_stats.socle_sur_400 >= 200 %}pass{% else %}below{% endif %}">
+            <div class="card-body text-center">
+                <h3><i class="fas fa-medal me-2"></i>Performance Level</h3>
+                <h2>{{ performance_level }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Subject Averages -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-book me-2"></i>Subject Averages (Weighted)</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for subject, average in subject_averages.items() %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="subject-card">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <strong>{{ subject }}</strong>
+                                    <span class="badge bg-primary fs-6">{{ average }} pts</span>
+                                </div>
+                                <div class="progress mt-2" style="height: 8px;">
+                                    <div class="progress-bar" role="progressbar" 
+                                         style="width: {{ (average / 50 * 100) }}%"
+                                         aria-valuenow="{{ average }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="50">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Individual Evaluations -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-list-alt me-2"></i>Individual Evaluations</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-book me-1"></i>Subject</th>
+                                <th><i class="fas fa-file-alt me-1"></i>Evaluation</th>
+                                <th><i class="fas fa-calendar me-1"></i>Date</th>
+                                <th><i class="fas fa-weight me-1"></i>Coefficient</th>
+                                <th><i class="fas fa-star me-1"></i>Grades</th>
+                                <th><i class="fas fa-calculator me-1"></i>Avg Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for evaluation in evaluations %}
+                                <tr>
+                                    <td>
+                                        <strong class="text-primary">{{ evaluation.subject }}</strong>
+                                    </td>
+                                    <td>
+                                        <span class="text-truncate d-inline-block" style="max-width: 200px;" 
+                                              title="{{ evaluation.name }}">
+                                            {{ evaluation.name }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ evaluation.date }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ evaluation.coefficient }}</span>
+                                    </td>
+                                    <td>
+                                        {% for grade in evaluation.grades %}
+                                            <span class="grade-badge grade-{{ grade.lower().replace('+', '-plus') }}">
+                                                {{ grade }}
+                                            </span>
+                                        {% endfor %}
+                                        {% if not evaluation.grades %}
+                                            <small class="text-muted">No grades</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <strong>{{ evaluation.average_points }}</strong>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer with additional info -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <h6><i class="fas fa-info-circle me-2"></i>Grade Point System</h6>
+                <p class="mb-0">
+                    <span class="grade-badge grade-a-plus">A+ = 50 pts</span>
+                    <span class="grade-badge grade-a">A = 40 pts</span>
+                    <span class="grade-badge grade-c">C = 25 pts</span>
+                    <span class="grade-badge grade-e">E = 10 pts</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Add some interactivity
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate progress bars
+    const progressBars = document.querySelectorAll('.progress-bar');
+    progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.transition = 'width 1s ease-in-out';
+            bar.style.width = width;
+        }, 500);
+    });
+    
+    // Add tooltips to truncated text
+    const truncatedElements = document.querySelectorAll('.text-truncate');
+    truncatedElements.forEach(element => {
+        element.style.cursor = 'help';
+    });
+});
+
+// Print functionality
+function printResults() {
+    window.print();
+}
+</script>
+{% endblock %}
