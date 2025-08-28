@@ -1,0 +1,1 @@
+web: gunicorn moyennisator3000:app
