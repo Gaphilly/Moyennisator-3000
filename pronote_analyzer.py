@@ -102,16 +102,16 @@ class PronoteAnalyzer:
         Convert letter grade to points for Brevet calculation.
         
         Args:
-            grade: Letter grade (A+, A, C, E, etc.)
+            grade: Letter grade (V+, V, J, R, etc.)
             
         Returns:
             Points value
         """
         mapping = {
-            "A+": 50,
-            "A": 40, 
-            "C": 25,
-            "E": 10
+            "V+": 50,
+            "V": 40, 
+            "J": 25,
+            "R": 10
         }
         return mapping.get(grade, 0)
     

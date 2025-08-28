@@ -19,7 +19,7 @@ Moyennisator 3000 est une application web Flask élégante qui se connecte à vo
 - **Moyennes par matière** : Calcul automatique des moyennes pondérées par coefficient
 - **Statistiques du Brevet** : Calcul complet des points du socle commun (sur 400)
 - **Niveau de performance** : Évaluation automatique du niveau (Très Bien, Bien, Assez Bien, etc.)
-- **Système de notation française** : Conversion des grades A+, A, C, E en points
+- **Système de notation française** : Conversion des grades V+, V, J, R en points
 
 ### 🎨 Interface Web Moderne
 - **Design responsive** : Compatible mobile, tablette et ordinateur
@@ -79,10 +79,10 @@ PRONOTE_PASSWORD=votre_mot_de_passe
 ## 🎓 Système de Notation
 
 ### Conversion des grades en points
-- **A+** : 50 points (Excellent)
-- **A** : 40 points (Très bien)
-- **C** : 25 points (Satisfaisant)
-- **E** : 10 points (Insuffisant)
+- **V+** : 50 points (Excellent)
+- **V** : 40 points (Très bien)  
+- **J** : 25 points (Satisfaisant)
+- **R** : 10 points (Insuffisant)
 
 ### Calcul du Brevet
 - **Moyenne points** : Moyenne pondérée sur 50 points
