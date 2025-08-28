@@ -1,1 +1,0 @@
-web: gunicorn moyennisator3000:app --bind 0.0.0.0:$PORT --log-level debug
