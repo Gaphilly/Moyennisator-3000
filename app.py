@@ -98,10 +98,10 @@ class PronoteAnalyzer:
             Points value
         """
         mapping = {
-            "V+": 50,
-            "V": 40, 
-            "J": 25,
-            "R": 10
+            "A+": 50,
+            "A": 40, 
+            "C": 25,
+            "E": 10
         }
         return mapping.get(grade, 0)
     
