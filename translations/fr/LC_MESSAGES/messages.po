@@ -4,10 +4,10 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
 msgid ""
-msgstr "Avertissement:"
+msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-28 21:25+0000\n"
+"POT-Creation-Date: 2025-08-28 21:28+0000\n"
 "PO-Revision-Date: 2025-08-28 21:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -18,48 +18,68 @@ msgstr "Avertissement:"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:314
+#: app.py:83
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: app.py:84
+msgid "Password"
+msgstr "Mot de passe"
+
+#: app.py:85
+msgid "Analyze Grades"
+msgstr "Analyser les notes"
+
+#: app.py:86
+msgid "Enter your Pronote username"
+msgstr "Entrez votre nom d'utilisateur Pronote"
+
+#: app.py:87
+msgid "Enter your Pronote password"
+msgstr "Entrez votre mot de passe Pronote"
+
+#: app.py:324
 msgid "Excellent (Mention Très Bien possible)"
 msgstr "Excellent (Mention Très Bien possible)"
 
-#: app.py:316
+#: app.py:326
 msgid "Good (Mention Bien possible)"
 msgstr "Bien (Mention Bien possible)"
 
-#: app.py:318
+#: app.py:328
 msgid "Satisfactory (Mention Assez Bien possible)"
 msgstr "Satisfaisant (Mention Assez Bien possible)"
 
-#: app.py:320
+#: app.py:330
 msgid "Pass level"
 msgstr "Niveau passable"
 
-#: app.py:322
+#: app.py:332
 msgid "Below pass level"
 msgstr "En dessous du niveau passable"
 
-#: app.py:346
-#, python-format
-msgid "Connection failed: %(message)s"
-msgstr "Avertissement:"
-
-#: app.py:353
-#, python-format
-msgid "Error fetching data: %(message)s"
-msgstr "Avertissement:"
-
 #: app.py:356
 #, python-format
+msgid "Connection failed: %(message)s"
+msgstr "Connexion échouée: %(message)s"
+
+#: app.py:363
+#, python-format
+msgid "Error fetching data: %(message)s"
+msgstr "Erreur lors de la récupération des données: %(message)s"
+
+#: app.py:366
+#, python-format
 msgid "Success: %(message)s"
-msgstr "Avertissement:"
+msgstr "Succès: %(message)s"
 
-#: app.py:360
+#: app.py:370
 msgid "Please check your input and try again."
-msgstr "Avertissement:"
+msgstr "Veuillez vérifier vos données et réessayer."
 
-#: app.py:375
+#: app.py:385
 msgid "No data available. Please login first."
-msgstr "Avertissement:"
+msgstr "Aucune donnée disponible. Veuillez vous connecter d'abord."
 
 #: templates/base.html:6 templates/index.html:3 templates/index.html:10
 #: templates/results.html:3
@@ -76,7 +96,6 @@ msgstr "Analysez vos performances académiques avec les statistiques du Brevet"
 
 #: templates/index.html:29
 msgid "Disclaimer:"
-msgstr "Avertissement:"
 msgstr "Avertissement:"
 
 #: templates/index.html:29

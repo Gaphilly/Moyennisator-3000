@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-28 21:25+0000\n"
+"POT-Creation-Date: 2025-08-28 21:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,46 +17,66 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:314
+#: app.py:83
+msgid "Username"
+msgstr ""
+
+#: app.py:84
+msgid "Password"
+msgstr ""
+
+#: app.py:85
+msgid "Analyze Grades"
+msgstr ""
+
+#: app.py:86
+msgid "Enter your Pronote username"
+msgstr ""
+
+#: app.py:87
+msgid "Enter your Pronote password"
+msgstr ""
+
+#: app.py:324
 msgid "Excellent (Mention Très Bien possible)"
 msgstr ""
 
-#: app.py:316
+#: app.py:326
 msgid "Good (Mention Bien possible)"
 msgstr ""
 
-#: app.py:318
+#: app.py:328
 msgid "Satisfactory (Mention Assez Bien possible)"
 msgstr ""
 
-#: app.py:320
+#: app.py:330
 msgid "Pass level"
 msgstr ""
 
-#: app.py:322
+#: app.py:332
 msgid "Below pass level"
-msgstr ""
-
-#: app.py:346
-#, python-format
-msgid "Connection failed: %(message)s"
-msgstr ""
-
-#: app.py:353
-#, python-format
-msgid "Error fetching data: %(message)s"
 msgstr ""
 
 #: app.py:356
 #, python-format
+msgid "Connection failed: %(message)s"
+msgstr ""
+
+#: app.py:363
+#, python-format
+msgid "Error fetching data: %(message)s"
+msgstr ""
+
+#: app.py:366
+#, python-format
 msgid "Success: %(message)s"
 msgstr ""
 
-#: app.py:360
+#: app.py:370
 msgid "Please check your input and try again."
 msgstr ""
 
-#: app.py:375
+#: app.py:385
 msgid "No data available. Please login first."
 msgstr ""
 

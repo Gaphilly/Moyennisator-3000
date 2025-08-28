@@ -72,14 +72,24 @@ def get_locale():
 babel = Babel()
 babel.init_app(app, default_locale='fr', locale_selector=get_locale)
 
+# Make get_locale available in templates
+app.jinja_env.globals['get_locale'] = get_locale
+app.jinja_env.globals['_'] = gettext
+
 class LoginForm(FlaskForm):
     """Form for Pronote login credentials."""
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+        self.username.label.text = gettext('Username')
+        self.password.label.text = gettext('Password') 
+        self.submit.label.text = gettext('Analyze Grades')
+        self.username.render_kw = {"placeholder": gettext("Enter your Pronote username")}
+        self.password.render_kw = {"placeholder": gettext("Enter your Pronote password")}
+    
     username = StringField('Username', 
-                          validators=[DataRequired(), Length(min=1, max=50)],
-                          render_kw={"placeholder": "Enter your Pronote username"})
+                          validators=[DataRequired(), Length(min=1, max=50)])
     password = PasswordField('Password', 
-                           validators=[DataRequired(), Length(min=1, max=100)],
-                           render_kw={"placeholder": "Enter your Pronote password"})
+                           validators=[DataRequired(), Length(min=1, max=100)])
     submit = SubmitField('Analyze Grades')
 
 class PronoteAnalyzer:

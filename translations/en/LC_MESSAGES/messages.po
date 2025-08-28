@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-28 21:25+0000\n"
+"POT-Creation-Date: 2025-08-28 21:28+0000\n"
 "PO-Revision-Date: 2025-08-28 21:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,46 +18,67 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:314
+#: app.py:83
+msgid "Username"
+msgstr ""
+
+#: app.py:84
+msgid "Password"
+msgstr ""
+
+#: app.py:85
+#, fuzzy
+msgid "Analyze Grades"
+msgstr "No grades"
+
+#: app.py:86
+msgid "Enter your Pronote username"
+msgstr ""
+
+#: app.py:87
+msgid "Enter your Pronote password"
+msgstr ""
+
+#: app.py:324
 msgid "Excellent (Mention Très Bien possible)"
 msgstr "Excellent (Très Bien mention possible)"
 
-#: app.py:316
+#: app.py:326
 msgid "Good (Mention Bien possible)"
 msgstr "Good (Bien mention possible)"
 
-#: app.py:318
+#: app.py:328
 msgid "Satisfactory (Mention Assez Bien possible)"
 msgstr "Satisfactory (Assez Bien mention possible)"
 
-#: app.py:320
+#: app.py:330
 msgid "Pass level"
 msgstr "Pass level"
 
-#: app.py:322
+#: app.py:332
 msgid "Below pass level"
 msgstr "Below pass level"
 
-#: app.py:346
+#: app.py:356
 #, python-format
 msgid "Connection failed: %(message)s"
 msgstr "Connection failed: %(message)s"
 
-#: app.py:353
+#: app.py:363
 #, python-format
 msgid "Error fetching data: %(message)s"
 msgstr "Error fetching data: %(message)s"
 
-#: app.py:356
+#: app.py:366
 #, python-format
 msgid "Success: %(message)s"
 msgstr "Success: %(message)s"
 
-#: app.py:360
+#: app.py:370
 msgid "Please check your input and try again."
 msgstr "Please check your input and try again."
 
-#: app.py:375
+#: app.py:385
 msgid "No data available. Please login first."
 msgstr "No data available. Please login first."
 
@@ -83,7 +104,10 @@ msgid ""
 "The data and statistics shown are estimations based on available "
 "evaluations and may not be entirely accurate. Results should be used for "
 "reference purposes only."
-msgstr "The data and statistics shown are estimations based on available evaluations and may not be entirely accurate. Results should be used for reference purposes only."
+msgstr ""
+"The data and statistics shown are estimations based on available "
+"evaluations and may not be entirely accurate. Results should be used for "
+"reference purposes only."
 
 #: templates/index.html:36
 msgid "Connected to:"
@@ -143,7 +167,11 @@ msgid ""
 "available evaluations and may not be entirely accurate. These results "
 "should be used for reference purposes only and do not represent official "
 "academic records."
-msgstr "All statistics and calculations displayed below are estimations based on available evaluations and may not be entirely accurate. These results should be used for reference purposes only and do not represent official academic records."
+msgstr ""
+"All statistics and calculations displayed below are estimations based on "
+"available evaluations and may not be entirely accurate. These results "
+"should be used for reference purposes only and do not represent official "
+"academic records."
 
 #: templates/results.html:23
 msgid "Grade Analysis Results"

@@ -4,10 +4,10 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
 msgid ""
-msgstr "Aviso:"
+msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-28 21:25+0000\n"
+"POT-Creation-Date: 2025-08-28 21:28+0000\n"
 "PO-Revision-Date: 2025-08-28 21:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -18,48 +18,69 @@ msgstr "Aviso:"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:314
+#: app.py:83
+msgid "Username"
+msgstr "Usuario"
+
+#: app.py:84
+msgid "Password"
+msgstr "Contraseña"
+
+#: app.py:85
+
+msgid "Analyze Grades"
+msgstr ""
+
+#: app.py:86
+msgid "Enter your Pronote username"
+msgstr ""
+
+#: app.py:87
+msgid "Enter your Pronote password"
+msgstr ""
+
+#: app.py:324
 msgid "Excellent (Mention Très Bien possible)"
 msgstr "Excelente (Mención Très Bien posible)"
 
-#: app.py:316
+#: app.py:326
 msgid "Good (Mention Bien possible)"
 msgstr "Bueno (Mención Bien posible)"
 
-#: app.py:318
+#: app.py:328
 msgid "Satisfactory (Mention Assez Bien possible)"
 msgstr "Satisfactorio (Mención Assez Bien posible)"
 
-#: app.py:320
+#: app.py:330
 msgid "Pass level"
 msgstr "Nivel de aprobado"
 
-#: app.py:322
+#: app.py:332
 msgid "Below pass level"
 msgstr "Por debajo del nivel de aprobado"
 
-#: app.py:346
-#, python-format
-msgid "Connection failed: %(message)s"
-msgstr "Aviso:"
-
-#: app.py:353
-#, python-format
-msgid "Error fetching data: %(message)s"
-msgstr "Aviso:"
-
 #: app.py:356
 #, python-format
+msgid "Connection failed: %(message)s"
+msgstr ""
+
+#: app.py:363
+#, python-format
+msgid "Error fetching data: %(message)s"
+msgstr ""
+
+#: app.py:366
+#, python-format
 msgid "Success: %(message)s"
-msgstr "Aviso:"
+msgstr ""
 
-#: app.py:360
+#: app.py:370
 msgid "Please check your input and try again."
-msgstr "Aviso:"
+msgstr ""
 
-#: app.py:375
+#: app.py:385
 msgid "No data available. Please login first."
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/base.html:6 templates/index.html:3 templates/index.html:10
 #: templates/results.html:3
@@ -76,67 +97,66 @@ msgstr "Analiza tu rendimiento académico con estadísticas del Brevet"
 
 #: templates/index.html:29
 msgid "Disclaimer:"
-msgstr "Aviso:"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/index.html:29
 msgid ""
 "The data and statistics shown are estimations based on available "
 "evaluations and may not be entirely accurate. Results should be used for "
 "reference purposes only."
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/index.html:36
 msgid "Connected to:"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/index.html:37
 msgid "Enter your Pronote credentials to analyze your grades"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/index.html:76
 msgid "Your credentials are secure and not stored"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/index.html:85
 msgid "What you'll get:"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/index.html:89
 msgid "Individual"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/index.html:89
 msgid "Evaluations"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/index.html:93 templates/results.html:115
 msgid "Subject"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/index.html:93
 msgid "Averages"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/index.html:97
 msgid "Brevet"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/index.html:97
 msgid "Statistics"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:3
 msgid "Results"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:7
 msgid "Back to Login"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:14
 msgid "Important Disclaimer:"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:14
 msgid ""
@@ -144,69 +164,69 @@ msgid ""
 "available evaluations and may not be entirely accurate. These results "
 "should be used for reference purposes only and do not represent official "
 "academic records."
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:23
 msgid "Grade Analysis Results"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:24
 msgid "Complete analysis of your academic performance"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:35
 msgid "Average Points (/50)"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:41
 msgid "Average (/20)"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:47
 msgid "Socle Score (/400)"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:53
 msgid "Total Evaluations"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:63
 msgid "Performance Level"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:75
 msgid "Subject Averages (Weighted)"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:108
 msgid "Individual Evaluations"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:116
 msgid "Evaluation"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:117
 msgid "Date"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:118
 msgid "Coefficient"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:119
 msgid "Grades"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:120
 msgid "Avg Points"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:148
 msgid "No grades"
-msgstr "Aviso:"
+msgstr ""
 
 #: templates/results.html:169
 msgid "Grade Point System"
-msgstr "Aviso:"
+msgstr ""
 

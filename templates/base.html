@@ -194,7 +194,13 @@
         <div class="dropdown">
             <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fas fa-globe me-1"></i>
-                <span id="current-language">Français</span>
+                <span id="current-language">
+                    {% set current_lang = get_locale() %}
+                    {% if current_lang == 'fr' %}Français
+                    {% elif current_lang == 'en' %}English
+                    {% elif current_lang == 'es' %}Español
+                    {% else %}Français{% endif %}
+                </span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="languageDropdown">
                 <li><a class="dropdown-item" href="{{ url_for('set_language', language='fr') }}"><i class="flag-icon flag-icon-fr me-2"></i>Français</a></li>
