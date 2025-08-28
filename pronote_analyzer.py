@@ -53,11 +53,10 @@ class PronoteAnalyzer:
         username = os.getenv('PRONOTE_USERNAME')
         password = os.getenv('PRONOTE_PASSWORD')
         
-        # If not found in environment, prompt user
+        # Use fixed URL if not in environment
         if not url:
-            url = input("Enter Pronote URL: ").strip()
-            if not url:
-                raise ValueError("Pronote URL is required")
+            url = "https://4170004n.index-education.net/pronote/eleve.html"
+            logger.info(f"Using default Pronote URL: {url}")
         
         if not username:
             username = input("Enter username: ").strip()
