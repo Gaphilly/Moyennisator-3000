@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Pronote Grade Analyzer is a Python application designed to analyze French academic grades from the Pronote educational platform. The system connects to Pronote's API to retrieve student evaluation data, processes grades using the French grading system, and calculates Brevet (French diploma) statistics. The application focuses on secure credential management, comprehensive error handling, and clean data presentation for academic performance analysis.
+Moyennisator 3000 is a modern web application designed to analyze French academic grades from the Pronote educational platform. The system features both a command-line interface and a beautiful web interface built with Flask. It connects to Pronote's API to retrieve student evaluation data, processes grades using the French grading system, and calculates Brevet (French diploma) statistics. The application focuses on secure credential management, modern web UI with Bootstrap, comprehensive error handling, and clean data presentation for academic performance analysis.
 
 ## User Preferences
 
