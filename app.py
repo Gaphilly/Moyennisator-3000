@@ -92,7 +92,7 @@ class PronoteAnalyzer:
         Convert letter grade to points for Brevet calculation.
         
         Args:
-            grade: Letter grade (V+, V, J, R, etc.)
+            grade: Letter grade from pronotepy (A+, A, C, E)
             
         Returns:
             Points value
@@ -104,6 +104,24 @@ class PronoteAnalyzer:
             "E": 10
         }
         return mapping.get(grade, 0)
+    
+    def convert_grade_for_display(self, grade: str) -> str:
+        """
+        Convert pronotepy grades (A+, A, C, E) to French display grades (V+, V, J, R).
+        
+        Args:
+            grade: Raw grade from pronotepy
+            
+        Returns:
+            French equivalent for display
+        """
+        mapping = {
+            "A+": "V+",
+            "A": "V",
+            "C": "J", 
+            "E": "R"
+        }
+        return mapping.get(grade, grade)  # Return original if not in mapping
     
     def fetch_evaluations(self) -> Tuple[bool, str]:
         """
@@ -160,10 +178,13 @@ class PronoteAnalyzer:
             points = []
             grades = []
             for acq in acquisitions:
-                grade = getattr(acq, 'abbreviation', '')
-                if grade:
-                    grades.append(grade)
-                    points.append(self.grade_to_points(grade))
+                raw_grade = getattr(acq, 'abbreviation', '')
+                if raw_grade:
+                    # Convert to French display format for users
+                    display_grade = self.convert_grade_for_display(raw_grade)
+                    grades.append(display_grade)
+                    # Use raw grade for calculation
+                    points.append(self.grade_to_points(raw_grade))
             
             # Calculate average points
             avg_points = sum(points) / len(points) if points else 0
