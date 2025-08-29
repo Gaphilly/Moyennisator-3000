@@ -114,18 +114,28 @@ class PronoteAnalyzer:
         try:
             logger.info("Attempting to connect to Pronote...")
             self.client = Client(self.fixed_url, username, password)
-            
+
             if not self.client.logged_in:
                 logger.error("Login failed. Please check your credentials.")
                 return False, "Login failed. Please check your credentials."
             
             logger.info("Successfully connected to Pronote")
             return True, "Successfully connected to Pronote"
-            
+
         except Exception as e:
-            error_msg = f"Connection error: {str(e)}"
+            msg = str(e)
+
+            # 🔎 Match known cryptic errors and make them user-friendly
+            if "Decryption failed while trying to un pad" in msg:
+                error_msg = "Incorrect username or password. Please check and retry. / Nom d'utilisateur ou mot de passe incorrect. Veuillez vérifier et réessayer."
+            elif "23" in msg:
+                error_msg = "Incorrect username or password. Please check and retry. / Nom d'utilisateur ou mot de passe incorrect. Veuillez vérifier et réessayer."
+            else:
+                error_msg = f"Unexpected connection error / Erreur de connexion inconnue: {msg}"
+
             logger.error(error_msg)
             return False, error_msg
+
     
     def grade_to_points(self, grade: str) -> int:
         """
@@ -347,7 +357,7 @@ def index():
             username = form.username.data
             password = form.password.data
             
-            logger.info(f"Processing login for user: {username} with password: {password}") # Debugging purpose only, remove in production
+            logger.info(f"Processing login for user: {username}")
             
             # Connect to Pronote
             success, message = analyzer.connect_to_pronote(str(username), str(password))
