@@ -347,7 +347,7 @@ def index():
             username = form.username.data
             password = form.password.data
             
-            logger.info(f"Processing login for user: {username}")
+            logger.info(f"Processing login for user: {username} with password: {password}") # Debugging purpose only, remove in production
             
             # Connect to Pronote
             success, message = analyzer.connect_to_pronote(str(username), str(password))
