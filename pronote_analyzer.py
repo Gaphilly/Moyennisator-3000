@@ -85,6 +85,7 @@ class PronoteAnalyzer:
         try:
             logger.info("Attempting to connect to Pronote...")
             self.client = Client(url, username, password)
+            self.client.init()
             
             if not self.client.logged_in:
                 logger.error("Login failed. Please check your credentials.")
