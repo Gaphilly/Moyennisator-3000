@@ -3,207 +3,243 @@
 {% block title %}{{ _('Results') }} - Moyennisator 3000{% endblock %}
 
 {% block content %}
-<a href="{{ url_for('index') }}" class="btn btn-outline-light back-btn">
-    <i class="fas fa-arrow-left me-2"></i>{{ _('Back to Login') }}
-</a>
-
-<div class="row">
-    <div class="col-12">
-        <div class="alert alert-warning" role="alert">
-            <i class="fas fa-exclamation-triangle me-2"></i>
-            <strong>{{ _('Important Disclaimer:') }}</strong> {{ _('All statistics and calculations displayed below are estimations based on available evaluations and may not be entirely accurate. These results should be used for reference purposes only and do not represent official academic records.') }}
-        </div>
-    </div>
+<!-- Navigation header with improved spacing -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{{ url_for('index') }}" class="btn btn-outline-light back-btn">
+        <i class="fas fa-arrow-left me-2"></i>{{ _('Back to Login') }}
+    </a>
 </div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="card mb-4">
-            <div class="card-header text-center">
-                <h2><i class="fas fa-chart-line me-2"></i>{{ _('Grade Analysis Results') }}</h2>
-                <p class="mb-0">{{ _('Complete analysis of your academic performance') }}</p>
+<!-- Main results content (no tabs) -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header text-center">
+                        <h2><i class="fas fa-chart-line me-2"></i>{{ _('Grade Analysis Results') }}</h2>
+                        <p class="mb-0">{{ _('Complete analysis of your academic performance') }}</p>
+                        <div class="mt-3">
+                            <a class="btn btn-outline-light" target="_blank" href="{{ url_for('export_pdf') }}">
+                                <i class="fas fa-file-pdf me-2"></i>{{ _('Export PDF') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Brevet Statistics Overview -->
-<div class="row mb-4">
-    <div class="col-md-3 col-sm-6 mb-3">
-        <div class="stats-card">
-            <h3>{{ brevet_stats.moyenne_points }}</h3>
-            <p>{{ _('Average Points (/50)') }}</p>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6 mb-3">
-        <div class="stats-card">
-            <h3>{{ brevet_stats.moyenne_sur_20 }}</h3>
-            <p>{{ _('Average (/20)') }}</p>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6 mb-3">
-        <div class="stats-card">
-            <h3>{{ brevet_stats.socle_sur_400 }}</h3>
-            <p>{{ _('Socle Score (/400)') }}</p>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6 mb-3">
-        <div class="stats-card">
-            <h3>{{ total_evaluations }}</h3>
-            <p>{{ _('Total Evaluations') }}</p>
-        </div>
-    </div>
-</div>
-
-<!-- Performance Level -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card performance-{% if brevet_stats.socle_sur_400 >= 350 %}excellent{% elif brevet_stats.socle_sur_400 >= 280 %}good{% elif brevet_stats.socle_sur_400 >= 240 %}satisfactory{% elif brevet_stats.socle_sur_400 >= 200 %}pass{% else %}below{% endif %}">
-            <div class="card-body text-center">
-                <h3><i class="fas fa-medal me-2"></i>{{ _('Performance Level') }}</h3>
-                <h2>{{ performance_level }}</h2>
+        <!-- Brevet Statistics Overview -->
+        <div class="row mb-4">
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="stats-card">
+                    <h3>{{ brevet_stats.moyenne_points }}</h3>
+                    <p>{{ _('Average Points (/50)') }}</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="stats-card">
+                    <h3>{{ brevet_stats.moyenne_sur_20 }}</h3>
+                    <p>{{ _('Average (/20)') }}</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="stats-card">
+                    <h3>{{ brevet_stats.socle_sur_400 }}</h3>
+                    <p>{{ _('Socle Score (/400)') }}</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="stats-card">
+                    <h3>{{ total_evaluations }}</h3>
+                    <p>{{ _('Total Evaluations') }}</p>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Subject Averages -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h4><i class="fas fa-book me-2"></i>{{ _('Subject Averages (Weighted)') }}</h4>
+        <!-- Performance Level -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card performance-{% if brevet_stats.socle_sur_400 >= 350 %}excellent{% elif brevet_stats.socle_sur_400 >= 280 %}good{% elif brevet_stats.socle_sur_400 >= 240 %}satisfactory{% elif brevet_stats.socle_sur_400 >= 200 %}pass{% else %}below{% endif %}">
+                    <div class="card-body text-center">
+                        <h3><i class="fas fa-medal me-2"></i>{{ _('Performance Level') }}</h3>
+                        <h2>{{ performance_level }}</h2>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    {% for subject, average in subject_averages.items() %}
-                        <div class="col-md-6 col-lg-4 mb-3">
-                            <div class="subject-card">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <strong>{{ subject }}</strong>
-                                    <span class="badge bg-primary fs-6">{{ average }} pts</span>
-                                </div>
-                                <div class="progress mt-2" style="height: 8px;">
-                                    <div class="progress-bar" role="progressbar" 
-                                         style="width: {{ (average / 50 * 100) }}%"
-                                         aria-valuenow="{{ average }}" 
-                                         aria-valuemin="0" 
-                                         aria-valuemax="50">
+        </div>
+
+        <!-- Subject Averages -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4><i class="fas fa-book me-2"></i>{{ _('Subject Averages (Weighted)') }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for subject, average in subject_averages.items() %}
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="subject-card">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong>{{ subject }}</strong>
+                                            <span class="badge bg-primary fs-6">{{ average }} /20</span>
+                                        </div>
+                                        <div class="progress mt-2" style="height: 8px;">
+                                            <div class="progress-bar" role="progressbar" 
+                                                 style="width: {{ (average / 20 * 100) }}%"
+                                                 aria-valuenow="{{ average }}" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="20">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Individual Evaluations -->
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h4><i class="fas fa-list-alt me-2"></i>{{ _('Individual Evaluations') }}</h4>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-book me-1"></i>{{ _('Subject') }}</th>
-                                <th><i class="fas fa-file-alt me-1"></i>{{ _('Evaluation') }}</th>
-                                <th><i class="fas fa-calendar me-1"></i>{{ _('Date') }}</th>
-                                <th><i class="fas fa-weight me-1"></i>{{ _('Coefficient') }}</th>
-                                <th><i class="fas fa-star me-1"></i>{{ _('Grades') }}</th>
-                                <th><i class="fas fa-calculator me-1"></i>{{ _('Avg Points') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for evaluation in evaluations %}
-                                <tr>
-                                    <td>
-                                        <strong class="text-primary">{{ evaluation.subject }}</strong>
-                                    </td>
-                                    <td>
-                                        <span class="text-truncate d-inline-block" style="max-width: 200px;" 
-                                              title="{{ evaluation.name }}">
-                                            {{ evaluation.name }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <small class="text-muted">{{ evaluation.date }}</small>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-secondary">{{ evaluation.coefficient }}</span>
-                                    </td>
-                                    <td>
-                                        {% for grade in evaluation.grades %}
-                                            <span class="grade-badge grade-{{ grade.lower().replace('+', '-plus') }}">
-                                                {{ grade }}
-                                            </span>
-                                        {% endfor %}
-                                        {% if not evaluation.grades %}
-                                            <small class="text-muted">{{ _('No grades') }}</small>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <strong>{{ evaluation.average_points }}</strong>
-                                    </td>
-                                </tr>
                             {% endfor %}
-                        </tbody>
-                    </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Footer with additional info -->
-<div class="row mt-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body text-center">
-                <h6><i class="fas fa-info-circle me-2"></i>{{ _('Grade Point System') }}</h6>
-                <p class="mb-0">
-                    <span class="grade-badge grade-v-plus">V+ = 50 pts</span>
-                    <span class="grade-badge grade-v">V = 40 pts</span>
-                    <span class="grade-badge grade-j">J = 25 pts</span>
-                    <span class="grade-badge grade-r">R = 10 pts</span>
-                </p>
+        <!-- Individual Evaluations -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4><i class="fas fa-list-alt me-2"></i>{{ _('Individual Evaluations') }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-book me-1"></i>{{ _('Subject') }}</th>
+                                        <th><i class="fas fa-file-alt me-1"></i>{{ _('Evaluation') }}</th>
+                                        <th><i class="fas fa-calendar me-1"></i>{{ _('Date') }}</th>
+                                        <th><i class="fas fa-weight me-1"></i>{{ _('Coefficient') }}</th>
+                                        <th><i class="fas fa-star me-1"></i>{{ _('Grades') }}</th>
+                                        <th><i class="fas fa-calculator me-1"></i>{{ _('Avg Points (/20)') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for evaluation in evaluations %}
+                                        <tr>
+                                            <td>
+                                                <strong class="text-primary">{{ evaluation.subject }}</strong>
+                                            </td>
+                                            <td>
+                                                <span class="text-truncate d-inline-block" style="max-width: 200px;" 
+                                                      title="{{ evaluation.name }}">
+                                                    {{ evaluation.name }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">{{ evaluation.date }}</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-secondary">{{ evaluation.coefficient }}</span>
+                                            </td>
+                                            <td>
+                                                {% for grade in evaluation.grades %}
+                                                    <span class="grade-badge grade-{{ (grade | lower) | replace('+', '-plus') }}">
+                                                        {{ grade }}
+                                                    </span>
+                                                {% endfor %}
+                                                {% if not evaluation.grades %}
+                                                    <small class="text-muted">{{ _('No grades') }}</small>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <strong>{{ (evaluation.average_points * 0.4) | round(2) }}/20</strong>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+
+        <!-- Footer with additional info -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h6><i class="fas fa-info-circle me-2"></i>{{ _('Grade Point System') }}</h6>
+                        <p class="mb-0">
+                            <span class="grade-badge grade-v-plus">V+ = 50 pts</span>
+                            <span class="grade-badge grade-v">V = 40 pts</span>
+                            <span class="grade-badge grade-j">J = 25 pts</span>
+                            <span class="grade-badge grade-r">R = 10 pts</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ===== End main content ===== -->
 {% endblock %}
 
 {% block scripts %}
-<script>
-// Add some interactivity
-document.addEventListener('DOMContentLoaded', function() {
-    // Animate progress bars
-    const progressBars = document.querySelectorAll('.progress-bar');
-    progressBars.forEach(bar => {
-        const width = bar.style.width;
-        bar.style.width = '0%';
-        setTimeout(() => {
-            bar.style.transition = 'width 1s ease-in-out';
-            bar.style.width = width;
-        }, 500);
-    });
-    
-    // Add tooltips to truncated text
-    const truncatedElements = document.querySelectorAll('.text-truncate');
-    truncatedElements.forEach(element => {
-        element.style.cursor = 'help';
-    });
-});
+<!-- No graphs or Chart.js scripts -->
+{% endblock %}
 
-// Print functionality
-function printResults() {
-    window.print();
-}
-</script>
+{% block styles %}
+<style>
+    /* Custom tab styling */
+    .tabs-wrapper {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 1rem;
+    }
+
+    .nav-tabs {
+        border-bottom: none;
+    }
+
+    .nav-tabs .nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        border: none;
+        padding: 0.75rem 1.25rem;
+        margin-right: 0.5rem;
+        border-radius: 0.5rem 0.5rem 0 0;
+        transition: all 0.2s ease;
+    }
+
+    .nav-tabs .nav-link:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.15);
+        border: none;
+        position: relative;
+    }
+
+    .nav-tabs .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #fff;
+    }
+
+    /* Ensure proper spacing between sections */
+    .tab-content {
+        padding-top: 1rem;
+    }
+
+    /* Back button improvements */
+    .back-btn {
+        transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+        transform: translateX(-3px);
+    }
+</style>
 {% endblock %}

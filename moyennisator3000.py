@@ -6,16 +6,20 @@ with Brevet statistics calculation.
 """
 
 import os
+import sys
 import logging
+from datetime import date, datetime
+from io import BytesIO
 from typing import List, Dict, Optional, Tuple
 from collections import defaultdict
 from uuid import uuid4
 
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session, send_file
 from flask_babel import Babel, gettext
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, CSRFProtect
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length
+from weasyprint import HTML
 
 try:
     from pronotepy import Client
@@ -37,8 +41,13 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "your-secret-key-change-in-production")
-app.config["WTF_CSRF_ENABLED"] = False  # Disabled for simplicity, your call
+# Load secret key from environment; fallback to a random key only for dev
+app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(32)
+# Enable CSRF protection
+app.config["WTF_CSRF_ENABLED"] = True
+app.config["WTF_CSRF_SECRET_KEY"] = os.environ.get("SECRET_KEY") or os.urandom(32)
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 # ---------- I18N ----------
 
@@ -65,6 +74,9 @@ babel.init_app(app, default_locale="fr", locale_selector=get_locale)
 # Make available in templates
 app.jinja_env.globals["get_locale"] = get_locale
 app.jinja_env.globals["_"] = gettext
+# expose useful objects to templates (used by base.html)
+app.jinja_env.globals["app"] = app
+app.jinja_env.globals["datetime"] = datetime
 
 # ---------- Forms ----------
 
@@ -95,10 +107,10 @@ class PronoteAnalyzer:
     def __init__(self):
         self.fixed_url = "https://4170004n.index-education.net/pronote/eleve.html"
 
-    def connect_and_fetch(self, username: str, password: str) -> Tuple[bool, str, List[Dict]]:
+    def connect_and_fetch(self, username: str, password: str) -> Tuple[bool, str, List[Dict], Dict]:
         """
         Connect, fetch evaluations, then dispose of the client.
-        Returns (success, message, evaluations)
+        Returns (success, message, evaluations, info_dict)
         """
         client: Optional[Client] = None
         try:
@@ -107,7 +119,7 @@ class PronoteAnalyzer:
 
             if not getattr(client, "logged_in", False):
                 logger.error("Login failed. Please check your credentials.")
-                return False, gettext("Login failed. Please check your credentials."), []
+                return False, gettext("Login failed. Please check your credentials."), [], {}
 
             logger.info("Successfully connected to Pronote")
 
@@ -116,7 +128,18 @@ class PronoteAnalyzer:
             periods = getattr(client, "periods", [])
             if not periods:
                 logger.warning("No periods found")
-                return True, gettext("No periods found"), []
+                # still return basic student/class info when available
+                info = {}
+                try:
+                    info_obj = getattr(client, "info", None)
+                    if info_obj:
+                        info = {
+                            "student_name": getattr(info_obj, "name", "-"),
+                            "class_name": getattr(info_obj, "class_name", "-"),
+                        }
+                except Exception:
+                    info = {}
+                return True, gettext("No periods found"), [], info
 
             for period in periods:
                 for evaluation in getattr(period, "evaluations", []):
@@ -128,8 +151,20 @@ class PronoteAnalyzer:
                         logger.warning(f"Error processing evaluation: {e}")
                         continue
 
+            # gather student info from client if available
+            info = {}
+            try:
+                info_obj = getattr(client, "info", None)
+                if info_obj:
+                    info = {
+                        "student_name": getattr(info_obj, "name", "-"),
+                        "class_name": getattr(info_obj, "class_name", "-"),
+                    }
+            except Exception:
+                info = {}
+
             logger.info(f"Successfully fetched {len(evaluations)} evaluations")
-            return True, gettext("Successfully fetched %(n)d evaluations", n=len(evaluations)), evaluations
+            return True, gettext("Successfully fetched %(n)d evaluations", n=len(evaluations)), evaluations, info
 
         except Exception as e:
             msg = str(e)
@@ -143,7 +178,7 @@ class PronoteAnalyzer:
                 error_msg = gettext("Unexpected connection error / Erreur de connexion inconnue: %(m)s", m=msg)
 
             logger.error(f"Connection error mapped: {error_msg}")
-            return False, error_msg, []
+            return False, error_msg, [], {}
         finally:
             # Best effort cleanup (pronotepy doesn't necessarily need explicit close)
             del client
@@ -172,9 +207,27 @@ class PronoteAnalyzer:
             subject_obj = getattr(evaluation, "subject", None)
             subject_name = getattr(subject_obj, "name", "Unknown") if subject_obj else "Unknown"
 
+            # Normalize/keep a datetime.date object for sorting, and a display string
+            raw_date = getattr(evaluation, "date", None)
+            date_obj = None
+            if isinstance(raw_date, date):
+                date_obj = raw_date
+            elif isinstance(raw_date, datetime):
+                date_obj = raw_date.date()
+            else:
+                # try to parse ISO-like strings, otherwise leave None
+                try:
+                    date_obj = datetime.fromisoformat(str(raw_date)).date()
+                except Exception:
+                    date_obj = None
+
+            # Display dates as dd/mm/YYYY when we have a date object
+            date_display = date_obj.strftime("%d/%m/%Y") if date_obj else str(raw_date or "Unknown")
+
             return {
                 "subject": subject_name,
-                "date": str(getattr(evaluation, "date", "Unknown")),
+                "date": date_display,
+                "date_obj": date_obj,
                 "name": getattr(evaluation, "name", "Unnamed"),
                 "coefficient": getattr(evaluation, "coefficient", 1),
                 "grades": grades,
@@ -195,8 +248,12 @@ class PronoteAnalyzer:
             totals[subject]["points"] += avg * coeff
             totals[subject]["coeffs"] += coeff
         out: Dict[str, float] = {}
+        # Convert subject averages from the internal 0-50 scale to 0-20 for display:
+        # factor = 20 / 50 = 0.4 (same conversion used for overall moyenne_sur_20)
         for subject, v in totals.items():
-            out[subject] = round((v["points"] / v["coeffs"]) if v["coeffs"] > 0 else 0.0, 2)
+            avg_50 = (v["points"] / v["coeffs"]) if v["coeffs"] > 0 else 0.0
+            avg_20 = round(avg_50 * 0.4, 2)
+            out[subject] = avg_20
         return out
 
     def compute_brevet_stats(self, evaluations: List[Dict]) -> Dict[str, float]:
@@ -247,22 +304,35 @@ def index():
 
             logger.info(f"Processing login for user: {username}")
 
-            success, message, evaluations = analyzer.connect_and_fetch(username, password)
+            success, message, evaluations, info = analyzer.connect_and_fetch(username, password)
             if not success:
                 flash(gettext("Connection failed: %(message)s", message=message), "error")
                 return render_template("index.html", form=form)
 
             # Compute and stash per-session results in memory
-            subject_averages = analyzer.calculate_subject_averages(evaluations)
-            brevet_stats = analyzer.compute_brevet_stats(evaluations)
+            # sort evaluations newest first using the date_obj field (fallback to minimal date)
+            evaluations_sorted = sorted(
+                evaluations,
+                key=lambda e: e.get("date_obj") or date.min,
+                reverse=True
+            )
+
+            subject_averages = analyzer.calculate_subject_averages(evaluations_sorted)
+            brevet_stats = analyzer.compute_brevet_stats(evaluations_sorted)
             performance_level = analyzer.get_performance_level(brevet_stats["socle_sur_400"])
 
             STORE[session["sid"]] = {
-                "evaluations": evaluations,
+                "evaluations": evaluations_sorted,
                 "subject_averages": subject_averages,
                 "brevet_stats": brevet_stats,
                 "performance_level": performance_level,
-                "total_evaluations": len(evaluations),
+                "total_evaluations": len(evaluations_sorted),
+                # Human-friendly export/report metadata
+                "date": datetime.now().strftime("%d/%m/%Y"),
+                "year": datetime.now().year,
+                # student / class from Pronote client.info when available
+                "student_name": (info.get("student_name") if isinstance(info, dict) else "-") if 'info' in locals() else "-",
+                "class_name": (info.get("class_name") if isinstance(info, dict) else "-") if 'info' in locals() else "-",
             }
 
             flash(gettext("Success: %(message)s", message=message), "success")
@@ -270,7 +340,7 @@ def index():
         else:
             flash(gettext("Please check your input and try again."), "error")
 
-    return render_template("index.html", form=form)
+    return render_template("index.html", form=form, languages=app.config['LANGUAGES'])
 
 @app.route("/set_language/<language>")
 def set_language(language=None):
@@ -302,6 +372,47 @@ def api_data():
         return jsonify({"error": "No data available"}), 400
     return jsonify(STORE[sid])
 
+@app.route("/results/pdf")
+def export_pdf():
+    sid = session.get("sid")
+    if not sid or sid not in STORE:
+        flash(gettext("No data available. Please login first."), "warning")
+        return redirect(url_for("index"))
+
+    data = STORE[sid]
+
+    # Build subjects list from subject averages ONLY, sorted alphabetically by subject name
+    subjects = []
+    subject_averages = data.get("subject_averages", {}) or {}
+    for name in sorted(subject_averages.keys(), key=lambda s: s.lower()):
+        avg = float(subject_averages.get(name, 0) or 0)
+        subjects.append({
+            "name": name,
+            "score": round(avg, 2),
+        })
+
+    rendered = render_template(
+        "results_pdf.html",
+        year=data.get("year", ""),
+        student_name=data.get("student_name", "-"),
+        class_name=data.get("class_name", "-"),
+        date=data.get("date", ""),
+        subjects=subjects,
+        average_20=data.get("brevet_stats", {}).get("moyenne_sur_20", 0),
+        socle_400=data.get("brevet_stats", {}).get("socle_sur_400", 0),
+    )
+
+    pdf_io = BytesIO()
+    HTML(string=rendered, base_url=request.host_url).write_pdf(pdf_io)
+    pdf_io.seek(0)
+
+    return send_file(
+        pdf_io,
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name="brevet_report.pdf"
+    )
+
 if __name__ == "__main__":
     # For local testing only; Railway uses Gunicorn
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)

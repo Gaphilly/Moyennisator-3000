@@ -5,87 +5,101 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-28 21:28+0000\n"
-"PO-Revision-Date: 2025-08-28 21:24+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Moyennisator-3000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-17 18:18+0000\n"
+"PO-Revision-Date: 2025-10-17 00:00+0000\n"
+"Last-Translator: Auto Translator <>\n"
+"Language-Team: en\n"
 "Language: en\n"
-"Language-Team: en <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.17.0\n"
 
-#: app.py:83
+#: moyennisator3000.py:84
 msgid "Username"
-msgstr ""
+msgstr "Username"
 
-#: app.py:84
+#: moyennisator3000.py:85
 msgid "Password"
-msgstr ""
+msgstr "Password"
 
-#: app.py:85
-#, fuzzy
+#: moyennisator3000.py:86
 msgid "Analyze Grades"
-msgstr "No grades"
+msgstr "Analyze Grades"
 
-#: app.py:86
+#: moyennisator3000.py:87
 msgid "Enter your Pronote username"
-msgstr ""
+msgstr "Enter your Pronote username"
 
-#: app.py:87
+#: moyennisator3000.py:88
 msgid "Enter your Pronote password"
-msgstr ""
+msgstr "Enter your Pronote password"
 
-#: app.py:324
+#: moyennisator3000.py:119
+msgid "Login failed. Please check your credentials."
+msgstr "Login failed. Please check your credentials."
+
+#: moyennisator3000.py:139
+msgid "No periods found"
+msgstr "No periods found"
+
+#: moyennisator3000.py:164
+#, python-format
+msgid "Successfully fetched %(n)d evaluations"
+msgstr "Successfully fetched %(n)d evaluations"
+
+#: moyennisator3000.py:171
+msgid "Incorrect password. / Mot de passe incorrect."
+msgstr "Incorrect password."
+
+#: moyennisator3000.py:173
+msgid "Incorrect username. / Nom d'utilisateur incorrect."
+msgstr "Incorrect username."
+
+#: moyennisator3000.py:175
+#, python-format
+msgid "Unexpected connection error / Erreur de connexion inconnue: %(m)s"
+msgstr "Unexpected connection error: %(m)s"
+
+#: moyennisator3000.py:268
 msgid "Excellent (Mention Très Bien possible)"
-msgstr "Excellent (Très Bien mention possible)"
+msgstr "Excellent (Très Bien possible)"
 
-#: app.py:326
+#: moyennisator3000.py:270
 msgid "Good (Mention Bien possible)"
-msgstr "Good (Bien mention possible)"
+msgstr "Good (Bien possible)"
 
-#: app.py:328
+#: moyennisator3000.py:272
 msgid "Satisfactory (Mention Assez Bien possible)"
-msgstr "Satisfactory (Assez Bien mention possible)"
+msgstr "Satisfactory (Assez Bien possible)"
 
-#: app.py:330
+#: moyennisator3000.py:274
 msgid "Pass level"
 msgstr "Pass level"
 
-#: app.py:332
+#: moyennisator3000.py:276
 msgid "Below pass level"
 msgstr "Below pass level"
 
-#: app.py:356
+#: moyennisator3000.py:302
 #, python-format
 msgid "Connection failed: %(message)s"
 msgstr "Connection failed: %(message)s"
 
-#: app.py:363
-#, python-format
-msgid "Error fetching data: %(message)s"
-msgstr "Error fetching data: %(message)s"
-
-#: app.py:366
+#: moyennisator3000.py:331
 #, python-format
 msgid "Success: %(message)s"
 msgstr "Success: %(message)s"
 
-#: app.py:370
+#: moyennisator3000.py:334
 msgid "Please check your input and try again."
 msgstr "Please check your input and try again."
 
-#: app.py:385
+#: moyennisator3000.py:348 moyennisator3000.py:372
 msgid "No data available. Please login first."
 msgstr "No data available. Please login first."
-
-#: templates/base.html:6 templates/index.html:3 templates/index.html:10
-#: templates/results.html:3
-msgid "Pronote Grade Analyzer"
-msgstr "Moyennisator 3000"
 
 #: templates/index.html:3
 msgid "Login"
@@ -133,7 +147,8 @@ msgstr "Individual"
 msgid "Evaluations"
 msgstr "Evaluations"
 
-#: templates/index.html:93 templates/results.html:115
+#: templates/index.html:93 templates/results.html:112
+#: templates/results_pdf.html:93
 msgid "Subject"
 msgstr "Subject"
 
@@ -157,83 +172,301 @@ msgstr "Results"
 msgid "Back to Login"
 msgstr "Back to Login"
 
-#: templates/results.html:14
-msgid "Important Disclaimer:"
-msgstr "Important Disclaimer:"
-
-#: templates/results.html:14
-msgid ""
-"All statistics and calculations displayed below are estimations based on "
-"available evaluations and may not be entirely accurate. These results "
-"should be used for reference purposes only and do not represent official "
-"academic records."
-msgstr ""
-"All statistics and calculations displayed below are estimations based on "
-"available evaluations and may not be entirely accurate. These results "
-"should be used for reference purposes only and do not represent official "
-"academic records."
-
-#: templates/results.html:23
+#: templates/results.html:15
 msgid "Grade Analysis Results"
 msgstr "Grade Analysis Results"
 
-#: templates/results.html:24
+#: templates/results.html:16
 msgid "Complete analysis of your academic performance"
 msgstr "Complete analysis of your academic performance"
 
-#: templates/results.html:35
+#: templates/results.html:19
+msgid "Export PDF"
+msgstr "Export PDF"
+
+#: templates/results.html:32
 msgid "Average Points (/50)"
 msgstr "Average Points (/50)"
 
-#: templates/results.html:41
+#: templates/results.html:38
 msgid "Average (/20)"
 msgstr "Average (/20)"
 
-#: templates/results.html:47
+#: templates/results.html:44
 msgid "Socle Score (/400)"
 msgstr "Socle Score (/400)"
 
-#: templates/results.html:53
+#: templates/results.html:50
 msgid "Total Evaluations"
 msgstr "Total Evaluations"
 
-#: templates/results.html:63
+#: templates/results.html:60
 msgid "Performance Level"
 msgstr "Performance Level"
 
-#: templates/results.html:75
+#: templates/results.html:72
 msgid "Subject Averages (Weighted)"
 msgstr "Subject Averages (Weighted)"
 
-#: templates/results.html:108
+#: templates/results.html:105
 msgid "Individual Evaluations"
 msgstr "Individual Evaluations"
 
-#: templates/results.html:116
+#: templates/results.html:113
 msgid "Evaluation"
 msgstr "Evaluation"
 
-#: templates/results.html:117
+#: templates/results.html:114 templates/results_pdf.html:86
 msgid "Date"
 msgstr "Date"
 
-#: templates/results.html:118
+#: templates/results.html:115
 msgid "Coefficient"
 msgstr "Coefficient"
 
-#: templates/results.html:119
+#: templates/results.html:116
 msgid "Grades"
 msgstr "Grades"
 
-#: templates/results.html:120
+#: templates/results.html:117
 msgid "Avg Points"
 msgstr "Avg Points"
 
-#: templates/results.html:148
+#: templates/results.html:145
 msgid "No grades"
 msgstr "No grades"
 
-#: templates/results.html:169
+#: templates/results.html:166
 msgid "Grade Point System"
 msgstr "Grade Point System"
+
+#: templates/results_pdf.html:5 templates/results_pdf.html:80
+msgid "Brevet Points Report"
+msgstr "Brevet Points Report"
+
+#: templates/results_pdf.html:81
+msgid "School year"
+msgstr "School year"
+
+#: templates/results_pdf.html:84
+msgid "Student"
+msgstr "Student"
+
+#: templates/results_pdf.html:85
+msgid "Class"
+msgstr "Class"
+
+#: templates/results_pdf.html:94 templates/results_pdf.html:109
+msgid "Average"
+msgstr "Average"
+
+#: templates/results_pdf.html:110
+msgid "Continuous assessment points"
+msgstr "Continuous assessment points"
+
+#: templates/results_pdf.html:114
+msgid "Generated by Moyennisator 3000"
+msgstr "Generated by Moyennisator 3000"
+
+#~ msgid "Username"
+#~ msgstr ""
+
+#~ msgid "Password"
+#~ msgstr ""
+
+#~ msgid "Analyze Grades"
+#~ msgstr "No grades"
+
+#~ msgid "Enter your Pronote username"
+#~ msgstr ""
+
+#~ msgid "Enter your Pronote password"
+#~ msgstr ""
+
+#~ msgid "Excellent (Mention Très Bien possible)"
+#~ msgstr "Excellent (Très Bien mention possible)"
+
+#~ msgid "Good (Mention Bien possible)"
+#~ msgstr "Good (Bien mention possible)"
+
+#~ msgid "Satisfactory (Mention Assez Bien possible)"
+#~ msgstr "Satisfactory (Assez Bien mention possible)"
+
+#~ msgid "Pass level"
+#~ msgstr "Pass level"
+
+#~ msgid "Below pass level"
+#~ msgstr "Below pass level"
+
+#~ msgid "Connection failed: %(message)s"
+#~ msgstr "Connection failed: %(message)s"
+
+#~ msgid "Error fetching data: %(message)s"
+#~ msgstr "Error fetching data: %(message)s"
+
+#~ msgid "Success: %(message)s"
+#~ msgstr "Success: %(message)s"
+
+#~ msgid "Please check your input and try again."
+#~ msgstr "Please check your input and try again."
+
+#~ msgid "No data available. Please login first."
+#~ msgstr "No data available. Please login first."
+
+#~ msgid "Pronote Grade Analyzer"
+#~ msgstr "Moyennisator 3000"
+
+#~ msgid "Login"
+#~ msgstr "Login"
+
+#~ msgid "Analyze your academic performance with Brevet statistics"
+#~ msgstr "Analyze your academic performance with Brevet statistics"
+
+#~ msgid "Disclaimer:"
+#~ msgstr "Disclaimer:"
+
+#~ msgid ""
+#~ "The data and statistics shown are "
+#~ "estimations based on available evaluations "
+#~ "and may not be entirely accurate. "
+#~ "Results should be used for reference "
+#~ "purposes only."
+#~ msgstr ""
+#~ "The data and statistics shown are "
+#~ "estimations based on available evaluations "
+#~ "and may not be entirely accurate. "
+#~ "Results should be used for reference "
+#~ "purposes only."
+
+#~ msgid "Connected to:"
+#~ msgstr "Connected to:"
+
+#~ msgid "Enter your Pronote credentials to analyze your grades"
+#~ msgstr "Enter your Pronote credentials to analyze your grades"
+
+#~ msgid "Your credentials are secure and not stored"
+#~ msgstr "Your credentials are secure and not stored"
+
+#~ msgid "What you'll get:"
+#~ msgstr "What you'll get:"
+
+#~ msgid "Individual"
+#~ msgstr "Individual"
+
+#~ msgid "Evaluations"
+#~ msgstr "Evaluations"
+
+#~ msgid "Subject"
+#~ msgstr "Subject"
+
+#~ msgid "Averages"
+#~ msgstr "Averages"
+
+#~ msgid "Brevet"
+#~ msgstr "Brevet"
+
+#~ msgid "Statistics"
+#~ msgstr "Statistics"
+
+#~ msgid "Results"
+#~ msgstr "Results"
+
+#~ msgid "Back to Login"
+#~ msgstr "Back to Login"
+
+#~ msgid "Important Disclaimer:"
+#~ msgstr "Important Disclaimer:"
+
+#~ msgid ""
+#~ "All statistics and calculations displayed "
+#~ "below are estimations based on available"
+#~ " evaluations and may not be entirely"
+#~ " accurate. These results should be "
+#~ "used for reference purposes only and "
+#~ "do not represent official academic "
+#~ "records."
+#~ msgstr ""
+#~ "All statistics and calculations displayed "
+#~ "below are estimations based on available"
+#~ " evaluations and may not be entirely"
+#~ " accurate. These results should be "
+#~ "used for reference purposes only and "
+#~ "do not represent official academic "
+#~ "records."
+
+#~ msgid "Grade Analysis Results"
+#~ msgstr "Grade Analysis Results"
+
+#~ msgid "Complete analysis of your academic performance"
+#~ msgstr "Complete analysis of your academic performance"
+
+#~ msgid "Average Points (/50)"
+#~ msgstr "Average Points (/50)"
+
+#~ msgid "Average (/20)"
+#~ msgstr "Average (/20)"
+
+#~ msgid "Socle Score (/400)"
+#~ msgstr "Socle Score (/400)"
+
+#~ msgid "Total Evaluations"
+#~ msgstr "Total Evaluations"
+
+#~ msgid "Performance Level"
+#~ msgstr "Performance Level"
+
+#~ msgid "Subject Averages (Weighted)"
+#~ msgstr "Subject Averages (Weighted)"
+
+#~ msgid "Individual Evaluations"
+#~ msgstr "Individual Evaluations"
+
+#~ msgid "Evaluation"
+#~ msgstr "Evaluation"
+
+#~ msgid "Date"
+#~ msgstr "Date"
+
+#~ msgid "Coefficient"
+#~ msgstr "Coefficient"
+
+#~ msgid "Grades"
+#~ msgstr "Grades"
+
+#~ msgid "Avg Points"
+#~ msgstr "Avg Points"
+
+#~ msgid "No grades"
+#~ msgstr "No grades"
+
+#~ msgid "Grade Point System"
+#~ msgstr "Grade Point System"
+
+#: moyennisator3000.py:86
+msgid "Overview"
+msgstr "Overview"
+
+#: moyennisator3000.py:86
+msgid "Graphs"
+msgstr "Graphs"
+
+#: moyennisator3000.py:86
+msgid "Overall Progress"
+msgstr "Overall Progress"
+
+#: moyennisator3000.py:86
+msgid "Year"
+msgstr "Year"
+
+#: moyennisator3000.py:86
+msgid "Term"
+msgstr "Term"
+
+#: moyennisator3000.py:86
+msgid "Grade /20"
+msgstr "Grade /20"
+
+#: moyennisator3000.py:86
+msgid "Subject Progress"
+msgstr "Subject Progress"
 
