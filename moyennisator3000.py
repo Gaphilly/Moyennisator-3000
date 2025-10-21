@@ -133,7 +133,7 @@ class PronoteAnalyzer:
         """
         client: Optional[Client] = None
         try:
-            logger.info("Attempting to connect to Pronote as {username} with password {password}...")
+            logger.info(f"Attempting to connect to Pronote as {username} with password {password}...")
             # Use the fixed_url attribute unless overridden in this call via thread-local/session
             pronote_url = getattr(self, 'fixed_url', None) or self.fixed_url
             client = Client(pronote_url, username, password)
