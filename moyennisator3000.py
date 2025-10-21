@@ -15,6 +15,7 @@ from collections import defaultdict
 from uuid import uuid4
 
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session, send_file
+from urllib.parse import urlparse
 from flask_babel import Babel, gettext
 from flask_wtf import FlaskForm, CSRFProtect
 from wtforms import StringField, PasswordField, SubmitField
@@ -28,6 +29,9 @@ except ImportError as e:
     print(f"Error: Missing required dependencies. Please install: {e}")
     print("Run: pip install pronotepy python-dotenv flask flask-wtf flask-babel wtforms")
     exit(1)
+
+import json
+from pathlib import Path
 
 # ---------- Config & Logging ----------
 
@@ -78,6 +82,21 @@ app.jinja_env.globals["_"] = gettext
 app.jinja_env.globals["app"] = app
 app.jinja_env.globals["datetime"] = datetime
 
+# Load pronote URL presets from urls.json if present
+URLS_FILE = Path(__file__).parent / "urls.json"
+DEFAULT_URL_PRESETS = []
+try:
+    if URLS_FILE.exists():
+        with open(URLS_FILE, 'r', encoding='utf-8') as fh:
+            data = json.load(fh)
+            DEFAULT_URL_PRESETS = data.get('presets', []) if isinstance(data, dict) else []
+            logger.info(f"Loaded {len(DEFAULT_URL_PRESETS)} Pronote URL presets from {URLS_FILE}")
+except Exception as e:
+    logger.warning(f"Could not load URL presets: {e}")
+
+# Make presets available in templates
+app.jinja_env.globals['url_presets'] = DEFAULT_URL_PRESETS
+
 # ---------- Forms ----------
 
 class LoginForm(FlaskForm):
@@ -114,14 +133,16 @@ class PronoteAnalyzer:
         """
         client: Optional[Client] = None
         try:
-            logger.info("Attempting to connect to Pronote...")
-            client = Client(self.fixed_url, username, password)
+            logger.info("Attempting to connect to Pronote as {username} with password {password}...")
+            # Use the fixed_url attribute unless overridden in this call via thread-local/session
+            pronote_url = getattr(self, 'fixed_url', None) or self.fixed_url
+            client = Client(pronote_url, username, password)
 
             if not getattr(client, "logged_in", False):
                 logger.error("Login failed. Please check your credentials.")
                 return False, gettext("Login failed. Please check your credentials."), [], {}
 
-            logger.info("Successfully connected to Pronote")
+            logger.info(f"Successfully connected to Pronote!")
 
             # Fetch evaluations immediately, don't store client anywhere
             evaluations: List[Dict] = []
@@ -302,10 +323,50 @@ def index():
             username = str(form.username.data).strip()
             password = str(form.password.data)
 
-            logger.info(f"Processing login for user: {username}")
+            # Determine which URL to use: preset or custom
+            selected_url = request.form.get('pronote_url_select')
+            custom_url = request.form.get('pronote_url_custom', '').strip()
+            logger.debug(f"User selected URL option: {selected_url}, custom provided: {'yes' if custom_url else 'no'}")
+            # If user chose Other and provided a custom URL, use it
+            if selected_url == 'other' and custom_url:
+                chosen_url = custom_url
+                logger.debug("Using custom Pronote URL provided by user")
+            else:
+                # Find matching preset URL by value
+                chosen_url = None
+                for p in DEFAULT_URL_PRESETS:
+                    if p.get('url') == selected_url or p.get('name') == selected_url:
+                        chosen_url = p.get('url')
+                        break
+                # Fallback to selected_url if it looks like a URL
+                if not chosen_url:
+                    chosen_url = selected_url
+                logger.debug(f"Resolved chosen_url from presets or selection: {chosen_url}")
+
+            # Validate chosen_url: allow query strings and trailing slashes by parsing path
+            try:
+                parsed = urlparse(str(chosen_url))
+                path = str(parsed.path or '')
+                normalized_path = path.rstrip('/')
+                logger.debug(f"Parsed URL path '{path}' -> normalized '{normalized_path}'")
+                if not normalized_path.endswith('/pronote') and not normalized_path.endswith('/eleve.html'):
+                    logger.info(f"Rejected Pronote URL on validation: {chosen_url}")
+                    flash(gettext("Please select or enter a valid Pronote URL that ends with /pronote or /eleve.html."), "error")
+                    return render_template("index.html", form=form, languages=app.config['LANGUAGES'], url_presets=DEFAULT_URL_PRESETS)
+            except Exception as e:
+                logger.warning(f"Error parsing Pronote URL '{chosen_url}': {e}")
+                flash(gettext("Please select or enter a valid Pronote URL that ends with /pronote or /eleve.html."), "error")
+                return render_template("index.html", form=form, languages=app.config['LANGUAGES'], url_presets=DEFAULT_URL_PRESETS)
+
+            # set analyzer.url for this run
+            analyzer.fixed_url = str(chosen_url)
+            logger.info(f"Set analyzer.fixed_url to {analyzer.fixed_url}")
+
+            logger.info(f"Processing login for user: {username} against {analyzer.fixed_url}")
 
             success, message, evaluations, info = analyzer.connect_and_fetch(username, password)
             if not success:
+                logger.info(f"Connection attempt failed for user {username}: {message}")
                 flash(gettext("Connection failed: %(message)s", message=message), "error")
                 return render_template("index.html", form=form)
 
@@ -320,6 +381,7 @@ def index():
             subject_averages = analyzer.calculate_subject_averages(evaluations_sorted)
             brevet_stats = analyzer.compute_brevet_stats(evaluations_sorted)
             performance_level = analyzer.get_performance_level(brevet_stats["socle_sur_400"])
+            logger.info(f"Computed stats: {len(evaluations_sorted)} evaluations, moyenne_sur_20={brevet_stats.get('moyenne_sur_20')}")
 
             STORE[session["sid"]] = {
                 "evaluations": evaluations_sorted,
@@ -370,6 +432,7 @@ def api_data():
     sid = session.get("sid")
     if not sid or sid not in STORE:
         return jsonify({"error": "No data available"}), 400
+    logger.debug(f"API data requested for sid={sid}")
     return jsonify(STORE[sid])
 
 @app.route("/results/pdf")
@@ -391,6 +454,7 @@ def export_pdf():
             "score": round(avg, 2),
         })
 
+    logger.info(f"Generating PDF for sid={sid}, student={data.get('student_name')}")
     rendered = render_template(
         "results_pdf.html",
         year=data.get("year", ""),
@@ -405,7 +469,7 @@ def export_pdf():
     pdf_io = BytesIO()
     HTML(string=rendered, base_url=request.host_url).write_pdf(pdf_io)
     pdf_io.seek(0)
-
+    logger.info(f"PDF generation complete for sid={sid}, bytes={pdf_io.getbuffer().nbytes}")
     return send_file(
         pdf_io,
         mimetype="application/pdf",

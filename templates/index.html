@@ -30,16 +30,29 @@
                     </div>
                 </div>
                 
-                <div class="mb-4">
-                    <div class="alert alert-info" role="alert">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>{{ _('Connected to:') }}</strong> 4170004n.index-education.net
-                        <br><small>{{ _('Enter your Pronote credentials to analyze your grades') }}</small>
-                    </div>
-                </div>
+                <!-- Pronote server selection: moved inside the form so values are submitted -->
                 
                 <form method="POST" id="loginForm">
                     {{ form.hidden_tag() }}
+
+                    <div class="mb-4">
+                        <div class="alert alert-info" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>{{ _('Pronote server:') }}</strong>
+                            <div class="mt-2">
+                                <select id="pronoteSelect" name="pronote_url_select" class="form-select">
+                                    {% if url_presets %}
+                                        {% for p in url_presets %}
+                                            <option value="{{ p.url }}">{{ p.name }} — {{ p.url }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <option value="other">{{ _('Other (enter custom URL)') }}</option>
+                                </select>
+                                <input type="text" id="pronoteCustom" name="pronote_url_custom" class="form-control mt-2" placeholder="https://example.pronote.school/pronote" style="display:none;">
+                            </div>
+                            <br><small>{{ _('Enter your Pronote credentials to analyze your grades') }}</small>
+                        </div>
+                    </div>
                     
                     <div class="mb-3">
                         {{ form.username.label(class="form-label fw-bold") }}
@@ -106,10 +119,52 @@
 
 {% block scripts %}
 <script>
-document.getElementById('loginForm').addEventListener('submit', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submitBtn');
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Connecting...';
-    submitBtn.disabled = true;
+    const form = document.getElementById('loginForm');
+    const select = document.getElementById('pronoteSelect');
+    const custom = document.getElementById('pronoteCustom');
+
+    if (submitBtn) {
+        form.addEventListener('submit', function() {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Connecting...';
+            submitBtn.disabled = true;
+        });
+    }
+
+    if (!select) return;
+    select.addEventListener('change', function() {
+        if (this.value === 'other') {
+            custom.style.display = 'block';
+            custom.focus();
+        } else {
+            custom.style.display = 'none';
+            custom.value = '';
+        }
+    });
+
+    // Validate chosen URL using the URL API to allow query strings and trailing slashes
+    form.addEventListener('submit', function(e) {
+        const chosen = select.value === 'other' ? (custom.value || '').trim() : select.value;
+        if (!chosen) {
+            e.preventDefault();
+            alert('Please select or enter a Pronote URL.');
+            return false;
+        }
+        try {
+            const u = new URL(chosen);
+            const path = (u.pathname || '').replace(/\/+$/, ''); // trim trailing slashes
+            if (!path.endsWith('/pronote') && !path.endsWith('/eleve.html')) {
+                e.preventDefault();
+                alert('Pronote URL must end with /pronote or /eleve.html');
+                return false;
+            }
+        } catch (err) {
+            e.preventDefault();
+            alert('Please enter a valid URL (including scheme, e.g. https://).');
+            return false;
+        }
+    });
 });
 </script>
 {% endblock %}
