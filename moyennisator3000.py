@@ -467,7 +467,8 @@ def export_pdf():
     )
 
     pdf_io = BytesIO()
-    HTML(string=rendered, base_url=request.host_url).write_pdf(pdf_io)
+    # Use keyword arguments for write_pdf to match newer WeasyPrint versions
+    HTML(string=rendered, base_url=request.host_url).write_pdf(target=pdf_io)
     pdf_io.seek(0)
     logger.info(f"PDF generation complete for sid={sid}, bytes={pdf_io.getbuffer().nbytes}")
     return send_file(
