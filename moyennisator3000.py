@@ -464,19 +464,17 @@ def export_pdf():
         subjects=subjects,
         average_20=data.get("brevet_stats", {}).get("moyenne_sur_20", 0),
         socle_400=data.get("brevet_stats", {}).get("socle_sur_400", 0),
-    )
+        )
+    # --- Patch : ne pas passer target=pdf_io, récupérer les bytes directement ---
+    pdf_bytes = HTML(string=rendered, base_url=request.url_root).write_pdf()  # retourne les bytes
+    pdf_io = BytesIO(pdf_bytes)  # convertir en BytesIO pour send_file
 
-    pdf_io = BytesIO()
-    # Use keyword arguments for write_pdf to match newer WeasyPrint versions
-    HTML(string=rendered, base_url=request.host_url).write_pdf(target=pdf_io)
-    pdf_io.seek(0)
-    logger.info(f"PDF generation complete for sid={sid}, bytes={pdf_io.getbuffer().nbytes}")
     return send_file(
         pdf_io,
         mimetype="application/pdf",
         as_attachment=True,
         download_name="brevet_report.pdf"
-    )
+        )
 
 if __name__ == "__main__":
     # For local testing only; Railway uses Gunicorn
