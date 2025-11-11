@@ -1,6 +1,7 @@
 # Moyennisator 3000
 
 Un analyseur de notes Pronote sécurisé avec interface web moderne pour analyser les performances académiques françaises et calculer les statistiques du Brevet.
+(hey uhh btw this whole README is AI cuz i'm too lazy so sorry lol)
 
 ## 🎯 Aperçu
 
