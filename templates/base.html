@@ -1,13 +1,28 @@
-<!DOCTYPE html>
-<html lang="{{ get_locale() or 'fr' }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>{% block title %}Moyennisator 3000{% endblock %}</title>
+    <!DOCTYPE html>
+    <html lang="{{ get_locale() or 'fr' }}">
+    <head>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-N821WZKKL9"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-    <!-- Bootstrap & icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        gtag('config', 'G-N821WZKKL9');
+        </script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link rel="manifest" href="/static/manifest.json">
+        <link rel="icon" href="/static/favicon.png">
+        <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+
+
+
+        <title>{% block title %}Moyennisator 3000{% endblock %}</title>
+
+        <!-- Bootstrap & icons -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <style>
         :root {
@@ -160,6 +175,14 @@
 <!-- Scripts: Bootstrap, Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/static/sw.js')
+            .then(() => console.log("SW ok"))
+            .catch(err => console.error("SW pas ok", err));
+    });
+</script>
+
 
 {% block scripts %}{% endblock %}
 </body>
