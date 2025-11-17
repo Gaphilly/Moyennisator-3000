@@ -183,6 +183,170 @@
     });
 </script>
 
+<!-- Auto-login (PWA only): store username + SHA256(password) locally and perform seamless POST to /auto_login -->
+<script>
+// Minimal, async SHA-256 helpers and unobtrusive form hook with transient toast
+(function(){
+    const LS_KEY = 'moyennisator_auto_login_v1';
+
+    async function sha256Hex(str) {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+        return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+
+    // transient toast utilities - large, centered, obvious
+    function showToast(msg) {
+        try {
+            let t = document.getElementById('moyauto_toast');
+            if (!t) {
+                t = document.createElement('div');
+                t.id = 'moyauto_toast';
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes moyAutoSpin {
+                        from { transform: rotate(0deg); }
+                        to { transform: rotate(360deg); }
+                    }
+                    #moyauto_toast {
+                        position: fixed !important;
+                        top: 50% !important;
+                        left: 50% !important;
+                        transform: translate(-50%, -50%) !important;
+                        background: rgba(30, 60, 114, 0.95) !important;
+                        border: 3px solid #4dc9f6 !important;
+                        color: #fff !important;
+                        padding: 24px 32px !important;
+                        border-radius: 12px !important;
+                        font-size: 18px !important;
+                        font-weight: 600 !important;
+                        z-index: 999999 !important;
+                        box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+                        text-align: center !important;
+                        max-width: 80% !important;
+                    }
+                    #moyauto_spinner {
+                        display: inline-block;
+                        width: 24px;
+                        height: 24px;
+                        border: 3px solid rgba(255,255,255,0.3);
+                        border-top-color: #4dc9f6;
+                        border-radius: 50%;
+                        animation: moyAutoSpin 0.8s linear infinite;
+                        margin-right: 12px;
+                        vertical-align: middle;
+                    }
+                `;
+                document.head.appendChild(style);
+                t = document.createElement('div');
+                t.id = 'moyauto_toast';
+                document.body.appendChild(t);
+            }
+            const spinner = '<span id="moyauto_spinner"></span>';
+            t.innerHTML = spinner + msg;
+            t.style.display = 'block';
+        } catch(e) { /* silent */ }
+    }
+    function hideToast() {
+        try {
+            const t = document.getElementById('moyauto_toast');
+            if (t) t.style.display = 'none';
+        } catch(e) { /* silent */ }
+    }
+
+    // Save credentials (username + hash + pronote url) on normal form submit without changing UI
+    function attachFormSaver() {
+        try {
+            const usernameInput = document.querySelector('input[name="username"]');
+            const passwordInput = document.querySelector('input[name="password"]');
+            if (!usernameInput || !passwordInput) return;
+
+            const form = passwordInput.form || usernameInput.form || document.querySelector('form');
+            if (!form) return;
+
+            form.addEventListener('submit', async function(evt){
+                evt.preventDefault();
+                try {
+                    const username = String(usernameInput.value || '').trim();
+                    const password = String(passwordInput.value || '');
+                    // read pronote url fields if present
+                    const urlSelect = (document.querySelector('select[name="pronote_url_select"]') || {}).value || null;
+                    const urlCustom = (document.querySelector('input[name="pronote_url_custom"]') || {}).value || null;
+                    if (username && password) {
+                        const hash = password;
+                        const payload = { username: username, password_sha256: hash, pronote_url_select: urlSelect, pronote_url_custom: urlCustom, ts: Date.now() };
+                        try { localStorage.setItem(LS_KEY, JSON.stringify(payload)); } catch(e) { /* ignore storage errors */ }
+                    }
+                } catch(e) {
+                    // ignore hashing/storage errors
+                }
+                requestAnimationFrame(()=> HTMLFormElement.prototype.submit.call(form));
+            }, {passive:false});
+        } catch(e) {
+            console.error('Auto-login form hook error', e);
+        }
+    }
+
+    // Only attempt auto-login when app is running as PWA (standalone)
+    function isPWA() {
+        return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+    }
+
+    async function attemptAutoLogin() {
+        if (!isPWA()) return;
+        // Don't auto-login if we're already on the results page
+        if (window.location.pathname !== '/') return;
+        
+        let stored = null;
+        try { stored = JSON.parse(localStorage.getItem(LS_KEY) || 'null'); } catch(e) { stored = null; }
+        if (!stored || !stored.username || !stored.password_sha256) return;
+
+        // Use stored pronote url if present, otherwise read current form fields
+        const urlSelect = stored.pronote_url_select || (document.querySelector('select[name="pronote_url_select"]') || {}).value || null;
+        const urlCustom = stored.pronote_url_custom || (document.querySelector('input[name="pronote_url_custom"]') || {}).value || null;
+
+        showToast('Auto-login…');
+
+        try {
+            const res = await fetch('/auto_login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: stored.username,
+                    password_sha256: stored.password_sha256,
+                    pronote_url_select: urlSelect,
+                    pronote_url_custom: urlCustom,
+                }),
+                credentials: 'same-origin'
+            });
+
+            if (res.ok) {
+                const j = await res.json();
+                hideToast();
+                if (j && j.redirect) {
+                    window.location.href = j.redirect;
+                    return;
+                }
+            }
+
+            // any failure: clear stored creds and go back to index
+            try { localStorage.removeItem(LS_KEY); } catch(e){}
+            hideToast();
+            window.location.href = '/';
+        } catch(e) {
+            try { localStorage.removeItem(LS_KEY); } catch(ex){}
+            hideToast();
+            window.location.href = '/';
+        }
+    }
+
+    // Initialize hooks on load
+    window.addEventListener('load', function(){
+        attachFormSaver();
+        // attempt auto-login shortly after load to let service worker/registers finish
+        setTimeout(attemptAutoLogin, 200);
+    });
+})();
+</script>
 
 {% block scripts %}{% endblock %}
 </body>

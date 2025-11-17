@@ -410,6 +410,90 @@ def set_language(language=None):
         session["language"] = language
     return redirect(request.referrer or url_for("index"))
 
+
+# Auto-login endpoint (used by the PWA). Expects JSON: { username, password_sha256, pronote_url_select?, pronote_url_custom? }
+# This route is intentionally CSRF-exempt because it's called from the PWA runtime JS using fetch.
+@csrf.exempt
+@app.route('/auto_login', methods=['POST'])
+def auto_login():
+    try:
+        data = request.get_json(force=True)
+    except Exception:
+        return jsonify({"error": gettext("Invalid request")}), 400
+
+    if not data:
+        return jsonify({"error": gettext("Invalid request")}), 400
+
+    username = str(data.get('username') or '').strip()
+    password_sha256 = str(data.get('password_sha256') or '')
+
+    if not username or not password_sha256:
+        return jsonify({"error": gettext("Missing credentials")}), 400
+
+    # determine chosen_url same as in index()
+    selected_url = data.get('pronote_url_select')
+    custom_url = (data.get('pronote_url_custom') or '').strip()
+    if selected_url == 'other' and custom_url:
+        chosen_url = custom_url
+    else:
+        chosen_url = None
+        for p in DEFAULT_URL_PRESETS:
+            if p.get('url') == selected_url or p.get('name') == selected_url:
+                chosen_url = p.get('url')
+                break
+        if not chosen_url:
+            chosen_url = selected_url
+
+    # minimal URL validation (same relaxed check as index)
+    try:
+        parsed = urlparse(str(chosen_url))
+        path = str(parsed.path or '')
+        normalized_path = path.rstrip('/')
+        if not normalized_path.endswith('/pronote') and not normalized_path.endswith('/eleve.html'):
+            return jsonify({"error": gettext("Please select or enter a valid Pronote URL that ends with /pronote or /eleve.html.")}), 400
+    except Exception:
+        return jsonify({"error": gettext("Please select or enter a valid Pronote URL that ends with /pronote or /eleve.html.")}), 400
+
+    # Ensure session id
+    if 'sid' not in session:
+        session['sid'] = str(uuid4())
+
+    analyzer.fixed_url = str(chosen_url)
+    logger.info(f"Auto-login attempt for user {username} against {analyzer.fixed_url}")
+
+    # NOTE: the client provides a SHA256(password) and we forward that string as the password to Pronotepy.
+    # This keeps no plaintext stored on the server. If the remote service requires the raw password this
+    # may fail and we'll return an error to the client which will clear its local storage.
+    success, message, evaluations, info = analyzer.connect_and_fetch(username, password_sha256)
+    if not success:
+        logger.info(f"Auto-login failed for user {username}: {message}")
+        return jsonify({"error": message}), 401
+
+    evaluations_sorted = sorted(
+        evaluations,
+        key=lambda e: e.get("date_obj") or date.min,
+        reverse=True
+    )
+
+    subject_averages = analyzer.calculate_subject_averages(evaluations_sorted)
+    brevet_stats = analyzer.compute_brevet_stats(evaluations_sorted)
+    performance_level = analyzer.get_performance_level(brevet_stats["socle_sur_400"])
+
+    STORE[session["sid"]] = {
+        "evaluations": evaluations_sorted,
+        "subject_averages": subject_averages,
+        "brevet_stats": brevet_stats,
+        "performance_level": performance_level,
+        "total_evaluations": len(evaluations_sorted),
+        "date": datetime.now().strftime("%d/%m/%Y"),
+        "year": datetime.now().year,
+        "student_name": (info.get("student_name") if isinstance(info, dict) else "-") if 'info' in locals() else "-",
+        "class_name": (info.get("class_name") if isinstance(info, dict) else "-") if 'info' in locals() else "-",
+    }
+
+    logger.info(f"Auto-login success for sid={session['sid']} user={username}")
+    return jsonify({"redirect": url_for('results')}), 200
+
 @app.route("/results")
 def results():
     sid = session.get("sid")
