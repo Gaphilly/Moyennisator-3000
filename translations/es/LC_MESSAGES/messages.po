@@ -1,105 +1,129 @@
-# Spanish translations for PROJECT.
+# Spanish translations for .
 # Copyright (C) 2025 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
+# This file is distributed under the same license as the  project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Moyennisator-3000\n"
+"Project-Id-Version:  Moyennisator-3000\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-17 18:18+0000\n"
+"POT-Creation-Date: 2025-11-18 08:01-0300\n"
 "PO-Revision-Date: 2025-10-17 00:00+0000\n"
 "Last-Translator: Auto Translator <>\n"
-"Language-Team: es\n"
 "Language: es\n"
+"Language-Team: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
 
-#: moyennisator3000.py:84
+#: moyennisator3000.py:106
 msgid "Username"
 msgstr "Usuario"
 
-#: moyennisator3000.py:85
+#: moyennisator3000.py:107
 msgid "Password"
 msgstr "Contraseña"
 
-#: moyennisator3000.py:86
+#: moyennisator3000.py:108
 msgid "Analyze Grades"
 msgstr "Analizar calificaciones"
 
-#: moyennisator3000.py:87
+#: moyennisator3000.py:109
 msgid "Enter your Pronote username"
 msgstr "Ingrese su usuario Pronote"
 
-#: moyennisator3000.py:88
+#: moyennisator3000.py:110
 msgid "Enter your Pronote password"
 msgstr "Ingrese su contraseña Pronote"
 
-#: moyennisator3000.py:119
+#: moyennisator3000.py:143
 msgid "Login failed. Please check your credentials."
 msgstr "Inicio de sesión fallido. Verifique sus credenciales."
 
-#: moyennisator3000.py:139
+#: moyennisator3000.py:164
 msgid "No periods found"
 msgstr "No se encontraron periodos"
 
-#: moyennisator3000.py:164
+#: moyennisator3000.py:190
 #, python-format
 msgid "Successfully fetched %(n)d evaluations"
 msgstr "Obtenidas correctamente %(n)d evaluaciones"
 
-#: moyennisator3000.py:171
+#: moyennisator3000.py:197
 msgid "Incorrect password. / Mot de passe incorrect."
 msgstr "Contraseña incorrecta."
 
-#: moyennisator3000.py:173
+#: moyennisator3000.py:199
 msgid "Incorrect username. / Nom d'utilisateur incorrect."
 msgstr "Usuario incorrecto."
 
-#: moyennisator3000.py:175
+#: moyennisator3000.py:201
 #, python-format
 msgid "Unexpected connection error / Erreur de connexion inconnue: %(m)s"
 msgstr "Error de conexión inesperado: %(m)s"
 
-#: moyennisator3000.py:268
+#: moyennisator3000.py:431
+msgid "Outstanding (Mention Très Bien avec Félicitations)"
+msgstr ""
+
+#: moyennisator3000.py:433
 msgid "Excellent (Mention Très Bien possible)"
 msgstr "Excelente (mención Très Bien posible)"
 
-#: moyennisator3000.py:270
+#: moyennisator3000.py:435
 msgid "Good (Mention Bien possible)"
 msgstr "Bien (mención Bien posible)"
 
-#: moyennisator3000.py:272
+#: moyennisator3000.py:437
 msgid "Satisfactory (Mention Assez Bien possible)"
 msgstr "Satisfactorio (mención Assez Bien posible)"
 
-#: moyennisator3000.py:274
+#: moyennisator3000.py:439
 msgid "Pass level"
 msgstr "Nivel aprobatorio"
 
-#: moyennisator3000.py:276
+#: moyennisator3000.py:441
 msgid "Below pass level"
 msgstr "Por debajo del nivel aprobatorio"
 
-#: moyennisator3000.py:302
+#: moyennisator3000.py:491 moyennisator3000.py:495 moyennisator3000.py:590
+#: moyennisator3000.py:592
+msgid ""
+"Please select or enter a valid Pronote URL that ends with /pronote or "
+"/eleve.html."
+msgstr ""
+
+#: moyennisator3000.py:507
 #, python-format
 msgid "Connection failed: %(message)s"
 msgstr "Conexión fallida: %(message)s"
 
-#: moyennisator3000.py:331
+#: moyennisator3000.py:537
 #, python-format
 msgid "Success: %(message)s"
 msgstr "Éxito: %(message)s"
 
-#: moyennisator3000.py:334
+#: moyennisator3000.py:540
 msgid "Please check your input and try again."
 msgstr "Por favor verifique sus datos e inténtelo de nuevo."
 
-#: moyennisator3000.py:348 moyennisator3000.py:372
+#: moyennisator3000.py:559 moyennisator3000.py:562
+msgid "Invalid request"
+msgstr ""
+
+#: moyennisator3000.py:568
+msgid "Missing credentials"
+msgstr ""
+
+#: moyennisator3000.py:638 moyennisator3000.py:663
 msgid "No data available. Please login first."
 msgstr "No hay datos disponibles. Inicie sesión primero."
+
+#: moyennisator3000.py:680
+msgid "Unknown"
+msgstr ""
 
 #: templates/index.html:3
 msgid "Login"
@@ -123,44 +147,47 @@ msgstr ""
 "evaluaciones disponibles y pueden no ser totalmente precisos. Los "
 "resultados deben usarse solo como referencia."
 
-#: templates/index.html:36
-msgid "Connected to:"
-msgstr "Conectado a:"
+#: templates/index.html:41
+msgid "Pronote server:"
+msgstr ""
 
-#: templates/index.html:37
+#: templates/index.html:49
+msgid "Other (enter custom URL)"
+msgstr ""
+
+#: templates/index.html:53
 msgid "Enter your Pronote credentials to analyze your grades"
 msgstr "Ingrese sus credenciales Pronote para analizar sus calificaciones"
 
-#: templates/index.html:76
+#: templates/index.html:89
 msgid "Your credentials are secure and not stored"
 msgstr "Sus credenciales están seguras y no se almacenan"
 
-#: templates/index.html:85
+#: templates/index.html:98
 msgid "What you'll get:"
 msgstr "Lo que obtendrás:"
 
-#: templates/index.html:89
+#: templates/index.html:102
 msgid "Individual"
 msgstr "Individual"
 
-#: templates/index.html:89
+#: templates/index.html:102 templates/results.html:113
 msgid "Evaluations"
 msgstr "Evaluaciones"
 
-#: templates/index.html:93 templates/results.html:112
-#: templates/results_pdf.html:93
+#: templates/index.html:106 templates/results.html:194
 msgid "Subject"
 msgstr "Asignatura"
 
-#: templates/index.html:93
+#: templates/index.html:106
 msgid "Averages"
 msgstr "Promedios"
 
-#: templates/index.html:97
+#: templates/index.html:110
 msgid "Brevet"
 msgstr "Brevet"
 
-#: templates/index.html:97
+#: templates/index.html:110
 msgid "Statistics"
 msgstr "Estadísticas"
 
@@ -168,130 +195,173 @@ msgstr "Estadísticas"
 msgid "Results"
 msgstr "Resultados"
 
-#: templates/results.html:7
+#: templates/results.html:9
 msgid "Back to Login"
 msgstr "Volver al inicio de sesión"
 
-msgid "Overview"
-msgstr "Resumen"
-
-#: templates/results.html:15
+#: templates/results.html:18
 msgid "Grade Analysis Results"
 msgstr "Resultados del análisis de notas"
 
-#: templates/results.html:16
+#: templates/results.html:19
 msgid "Complete analysis of your academic performance"
 msgstr "Análisis completo de tu rendimiento académico"
 
-#: templates/results.html:19
-msgid "Export PDF"
-msgstr "Exportar PDF"
+#: templates/results.html:25
+msgid "Overview"
+msgstr "Resumen"
 
-#: templates/results.html:32
-msgid "Average Points (/50)"
-msgstr "Puntos promedio (/50)"
+#: templates/results.html:30
+#, fuzzy
+msgid "Individual Domains"
+msgstr "Evaluaciones individuales"
 
-#: templates/results.html:38
-msgid "Average (/20)"
-msgstr "Media (/20)"
-
-#: templates/results.html:44
-msgid "Socle Score (/400)"
-msgstr "Puntuación del socle (/400)"
-
-#: templates/results.html:50
-msgid "Total Evaluations"
+#: templates/results.html:35
+#, fuzzy
+msgid "All Evaluations"
 msgstr "Total de evaluaciones"
 
-#: templates/results.html:60
+#: templates/results.html:51 templates/results_pdf.html:123
+msgid "Total DNB Score"
+msgstr ""
+
+#: templates/results.html:57 templates/results_pdf.html:124
 msgid "Performance Level"
 msgstr "Nivel de desempeño"
 
-#: templates/results.html:72
-msgid "Subject Averages (Weighted)"
-msgstr "Promedios por asignatura (ponderados)"
+#: templates/results.html:97
+msgid "Export PDF"
+msgstr "Exportar PDF"
 
-#: templates/results.html:105
-msgid "Individual Evaluations"
-msgstr "Evaluaciones individuales"
+#: templates/results.html:110 templates/results_pdf.html:105
+msgid "Domain"
+msgstr ""
 
-#: templates/results.html:113
+#: templates/results.html:111 templates/results_pdf.html:106
+msgid "Score /50"
+msgstr ""
+
+#: templates/results.html:112 templates/results_pdf.html:107
+#, fuzzy
+msgid "Score /20"
+msgstr "Nota /20"
+
+#: templates/results.html:136
+msgid "DNL HG (Languages / History-Geography)"
+msgstr ""
+
+#: templates/results.html:137
+msgid "This DNL HG score does not count towards the total DNB score."
+msgstr ""
+
+#: templates/results.html:143
+msgid "DNL HG"
+msgstr ""
+
+#: templates/results.html:150
+msgid "Palier:"
+msgstr ""
+
+#: templates/results.html:151
+msgid "Raw avg:"
+msgstr ""
+
+#: templates/results.html:161
+#, fuzzy
+msgid "Subject Averages"
+msgstr "Progreso por materia"
+
+#: templates/results.html:195
 msgid "Evaluation"
 msgstr "Evaluación"
 
-#: templates/results.html:114 templates/results_pdf.html:86
+#: templates/results.html:196 templates/results_pdf.html:96
 msgid "Date"
 msgstr "Fecha"
 
-#: templates/results.html:115
+#: templates/results.html:197
 msgid "Coefficient"
 msgstr "Coeficiente"
 
-#: templates/results.html:116
+#: templates/results.html:198
 msgid "Grades"
 msgstr "Calificaciones"
 
-#: templates/results.html:117
-msgid "Avg Points"
-msgstr "Ptos promedio"
+#: templates/results.html:199
+#, fuzzy
+msgid "Avg Points (/50)"
+msgstr "Puntos promedio (/50)"
 
-#: templates/results.html:145
+#: templates/results.html:227
 msgid "No grades"
 msgstr "Sin calificaciones"
 
-#: templates/results.html:166
+#: templates/results.html:250
 msgid "Grade Point System"
 msgstr "Sistema de puntos"
 
-#: templates/results_pdf.html:5 templates/results_pdf.html:80
-msgid "Brevet Points Report"
-msgstr "Informe de puntos del Brevet"
+#: templates/results_pdf.html:5
+msgid "DNB Report"
+msgstr ""
 
-#: templates/results_pdf.html:81
+#: templates/results_pdf.html:90
+#, fuzzy
+msgid "DNB Evaluation Report"
+msgstr "Evaluación"
+
+#: templates/results_pdf.html:91
 msgid "School year"
 msgstr "Año escolar"
 
-#: templates/results_pdf.html:84
+#: templates/results_pdf.html:94
 msgid "Student"
 msgstr "Estudiante"
 
-#: templates/results_pdf.html:85
+#: templates/results_pdf.html:95
 msgid "Class"
 msgstr "Clase"
 
-#: templates/results_pdf.html:94 templates/results_pdf.html:109
-msgid "Average"
-msgstr "Promedio"
+#: templates/results_pdf.html:99
+msgid "Official DNB Domains"
+msgstr ""
 
-#: templates/results_pdf.html:110
-msgid "Continuous assessment points"
-msgstr "Puntos de evaluación continua"
-
-#: templates/results_pdf.html:114
+#: templates/results_pdf.html:128
 msgid "Generated by Moyennisator 3000"
 msgstr "Generado por Moyennisator 3000"
 
-#: moyennisator3000.py:86
-msgid "Graphs"
-msgstr "Gráficos"
+#~ msgid "Connected to:"
+#~ msgstr "Conectado a:"
 
-#: moyennisator3000.py:139
-msgid "Overall Progress"
-msgstr "Progreso general"
+#~ msgid "Average (/20)"
+#~ msgstr "Media (/20)"
 
-#: moyennisator3000.py:164
-msgid "Year"
-msgstr "Año"
+#~ msgid "Socle Score (/400)"
+#~ msgstr "Puntuación del socle (/400)"
 
-#: moyennisator3000.py:171
-msgid "Term"
-msgstr "Trimestre"
+#~ msgid "Subject Averages (Weighted)"
+#~ msgstr "Promedios por asignatura (ponderados)"
 
-#: moyennisator3000.py:173
-msgid "Grade /20"
-msgstr "Nota /20"
+#~ msgid "Avg Points"
+#~ msgstr "Ptos promedio"
 
-#: moyennisator3000.py:175
-msgid "Subject Progress"
-msgstr "Progreso por materia"
+#~ msgid "Brevet Points Report"
+#~ msgstr "Informe de puntos del Brevet"
+
+#~ msgid "Average"
+#~ msgstr "Promedio"
+
+#~ msgid "Continuous assessment points"
+#~ msgstr "Puntos de evaluación continua"
+
+#~ msgid "Graphs"
+#~ msgstr "Gráficos"
+
+#~ msgid "Overall Progress"
+#~ msgstr "Progreso general"
+
+#~ msgid "Year"
+#~ msgstr "Año"
+
+#~ msgid "Term"
+#~ msgstr "Trimestre"
 

@@ -126,10 +126,10 @@ class PronoteAnalyzer:
     def __init__(self):
         self.fixed_url = "https://4170004n.index-education.net/pronote/eleve.html"
 
-    def connect_and_fetch(self, username: str, password: str) -> Tuple[bool, str, List[Dict], Dict]:
+    def connect_and_fetch(self, username: str, password: str) -> Tuple[bool, str, List[Dict], Dict, List]:
         """
         Connect, fetch evaluations, then dispose of the client.
-        Returns (success, message, evaluations, info_dict)
+        Returns (success, message, evaluations_processed, info_dict, evaluations_raw)
         """
         client: Optional[Client] = None
         try:
@@ -140,12 +140,13 @@ class PronoteAnalyzer:
 
             if not getattr(client, "logged_in", False):
                 logger.error("Login failed. Please check your credentials.")
-                return False, gettext("Login failed. Please check your credentials."), [], {}
+                return False, gettext("Login failed. Please check your credentials."), [], {}, []
 
             logger.info(f"Successfully connected to Pronote!")
 
             # Fetch evaluations immediately, don't store client anywhere
-            evaluations: List[Dict] = []
+            evaluations_processed: List[Dict] = []
+            evaluations_raw: List = []
             periods = getattr(client, "periods", [])
             if not periods:
                 logger.warning("No periods found")
@@ -160,14 +161,15 @@ class PronoteAnalyzer:
                         }
                 except Exception:
                     info = {}
-                return True, gettext("No periods found"), [], info
+                return True, gettext("No periods found"), [], info, []
 
             for period in periods:
                 for evaluation in getattr(period, "evaluations", []):
                     try:
+                        evaluations_raw.append(evaluation)
                         ev = self._process_evaluation(evaluation)
                         if ev:
-                            evaluations.append(ev)
+                            evaluations_processed.append(ev)
                     except Exception as e:
                         logger.warning(f"Error processing evaluation: {e}")
                         continue
@@ -184,8 +186,8 @@ class PronoteAnalyzer:
             except Exception:
                 info = {}
 
-            logger.info(f"Successfully fetched {len(evaluations)} evaluations")
-            return True, gettext("Successfully fetched %(n)d evaluations", n=len(evaluations)), evaluations, info
+            logger.info(f"Successfully fetched {len(evaluations_processed)} evaluations")
+            return True, gettext("Successfully fetched %(n)d evaluations", n=len(evaluations_processed)), evaluations_processed, info, evaluations_raw
 
         except Exception as e:
             msg = str(e)
@@ -204,13 +206,97 @@ class PronoteAnalyzer:
             # Best effort cleanup (pronotepy doesn't necessarily need explicit close)
             del client
 
-    def grade_to_points(self, grade: str) -> int:
+    def grade_abbreviation_to_palier(self, abbrev: str) -> int:
+        """Convert abbreviation (A+, A, C, E) to palier points (50, 40, 25, 10)."""
         mapping = {"A+": 50, "A": 40, "C": 25, "E": 10}
-        return mapping.get(grade, 0)
+        return mapping.get(abbrev, 0)
 
     def convert_grade_for_display(self, grade: str) -> str:
         mapping = {"A+": "V+", "A": "V", "C": "J", "E": "R"}
         return mapping.get(grade, grade)
+
+    def count_domains_and_acquisitions(self, evaluations_raw: List) -> Tuple[Dict, List]:
+        """
+        Count acquisitions per domain and track DNL HG acquisitions.
+        Only tracks acquisitions with empty pillar_prefix where subject is exactly "DNL HG".
+        Returns (domain_counts: Dict[subdomain -> count], dnl_hg_acquisitions: List[acq dicts])
+        """
+        domain_counts = defaultdict(int)
+        dnl_hg_acquisitions = []
+
+        for evaluation in evaluations_raw:
+            eval_subject = getattr(getattr(evaluation, "subject", None), "name", "Unknown")
+            
+            for acq in getattr(evaluation, "acquisitions", []):
+                pillar = getattr(acq, "pillar_prefix", "")
+                abbrev = getattr(acq, "abbreviation", "")
+                
+                if pillar:
+                    # Split comma-separated domains
+                    for subdomain in [s.strip() for s in pillar.split(',')]:
+                        domain_counts[subdomain] += 1
+                else:
+                    # Only track DNL HG acquisitions (ignore other empty pillar_prefix)
+                    if eval_subject == "DNL HG":
+                        dnl_hg_acquisitions.append({
+                            "evaluation_name": getattr(evaluation, "name", "Unknown"),
+                            "subject": eval_subject,
+                            "abbreviation": abbrev,
+                            "palier_points": self.grade_abbreviation_to_palier(abbrev),
+                        })
+
+        return dict(domain_counts), dnl_hg_acquisitions
+
+    def compute_domain_scores(self, evaluations_raw: List) -> Dict:
+        """
+        Compute per-domain scores based on threshold-snapping of average palier points.
+        Each domain gets one of: V+ (50), V (40), J (25), R (10) based on average points.
+        Returns dict: { domain_name: { "count": int, "avg_points_50": float, "avg_points_20": float, "palier": str } }
+        """
+        domain_palier_points = defaultdict(list)  # domain -> [points, points, ...]
+        
+        # Collect palier points per domain
+        for evaluation in evaluations_raw:
+            for acq in getattr(evaluation, "acquisitions", []):
+                pillar = getattr(acq, "pillar_prefix", "")
+                abbrev = getattr(acq, "abbreviation", "")
+                
+                if pillar:
+                    palier_points = self.grade_abbreviation_to_palier(abbrev)
+                    for subdomain in [s.strip() for s in pillar.split(',')]:
+                        domain_palier_points[subdomain].append(palier_points)
+
+        # Compute average points per domain and snap to nearest palier
+        domain_scores = {}
+        for domain, points_list in domain_palier_points.items():
+            avg_points = sum(points_list) / len(points_list)
+            
+            # Threshold-based snapping:
+            # >= 45 → V+ (50), >= 32.5 → V (40), >= 17.5 → J (25), < 17.5 → R (10)
+            if avg_points >= 45:
+                snapped_points = 50
+                palier_display = "V+"
+            elif avg_points >= 32.5:
+                snapped_points = 40
+                palier_display = "V"
+            elif avg_points >= 17.5:
+                snapped_points = 25
+                palier_display = "J"
+            else:
+                snapped_points = 10
+                palier_display = "R"
+            
+            snapped_points_20 = round(snapped_points * 0.4, 2)
+            
+            domain_scores[domain] = {
+                "count": len(points_list),
+                "avg_points_50": float(snapped_points),
+                "avg_points_20": snapped_points_20,
+                "palier": palier_display,
+                "raw_avg": round(avg_points, 2),  # For debugging
+            }
+
+        return domain_scores
 
     def _process_evaluation(self, evaluation) -> Optional[Dict]:
         try:
@@ -222,7 +308,7 @@ class PronoteAnalyzer:
                 raw = getattr(acq, "abbreviation", "")
                 if raw:
                     grades.append(self.convert_grade_for_display(raw))
-                    points.append(self.grade_to_points(raw))
+                    points.append(self.grade_abbreviation_to_palier(raw))
 
             avg_points = sum(points) / len(points) if points else 0
             subject_obj = getattr(evaluation, "subject", None)
@@ -277,28 +363,79 @@ class PronoteAnalyzer:
             out[subject] = avg_20
         return out
 
-    def compute_brevet_stats(self, evaluations: List[Dict]) -> Dict[str, float]:
-        if not evaluations:
-            return {"moyenne_points": 0, "moyenne_sur_20": 0, "socle_sur_400": 0}
-        total_coeff = sum(float(ev.get("coefficient", 0) or 0) for ev in evaluations)
-        if total_coeff == 0:
-            return {"moyenne_points": 0, "moyenne_sur_20": 0, "socle_sur_400": 0}
-        total_points = sum(float(ev.get("coefficient", 0) or 0) * float(ev.get("average_points", 0) or 0) for ev in evaluations)
-        moyenne_points = total_points / total_coeff
-        return {
-            "moyenne_points": round(moyenne_points, 2),
-            "moyenne_sur_20": round(moyenne_points * 0.4, 2),
-            "socle_sur_400": round(moyenne_points * 8, 2),
-        }
+    def compute_brevet_stats(self, evaluations_raw: List) -> Dict[str, any]:
+            """
+            Compute DNB domain scores and overall statistics.
+            Returns dict with domain_scores, total_50, total_400, dnl_hg_acquisitions.
+            DNB has exactly 8 official domains: D1.1, D1.2, D1.3, D1.4, D2, D3, D4, D5
+            Total /400 = sum of all 8 domain scores (/50 each).
+            DNL HG acquisitions are tracked separately and don't count towards /400.
+            """
+            if not evaluations_raw:
+                return {
+                    "domain_scores": {},
+                    "total_50": 0,
+                    "total_400": 0,
+                    "dnl_hg_acquisitions": [],
+                }
 
-    def get_performance_level(self, socle_score: float) -> str:
-        if socle_score >= 350:
+            domain_scores = self.compute_domain_scores(evaluations_raw)
+            domain_counts, dnl_hg_acquisitions = self.count_domains_and_acquisitions(evaluations_raw)
+
+            # Compute a single snapped DNL HG score (do not include in /400)
+            dnl_hg_score = None
+            if dnl_hg_acquisitions:
+                pts = [a.get("palier_points", 0) for a in dnl_hg_acquisitions]
+                raw_avg = sum(pts) / len(pts) if pts else 0.0
+                # snap thresholds
+                if raw_avg >= 45:
+                    snapped = 50
+                    pal = "V+"
+                elif raw_avg >= 32.5:
+                    snapped = 40
+                    pal = "V"
+                elif raw_avg >= 17.5:
+                    snapped = 25
+                    pal = "J"
+                else:
+                    snapped = 10
+                    pal = "R"
+
+                dnl_hg_score = {
+                    "count": len(pts),
+                    "avg_points_50": float(snapped),
+                    "avg_points_20": round(snapped * 0.4, 2),
+                    "palier": pal,
+                    "raw_avg": round(raw_avg, 2),
+                }
+
+            # Filter out EMPTY and compute totals
+            official_domains = [d for d in domain_scores.keys() if d != "EMPTY"]
+            if official_domains:
+                # Total /400 = direct sum of all 8 domain scores (each domain is /50)
+                total_400 = sum(domain_scores[d]["avg_points_50"] for d in official_domains)
+            else:
+                total_400 = 0
+
+            return {
+                "domain_scores": domain_scores,
+                "total_50": round(total_400 / 8 if official_domains else 0, 2),
+                "total_400": round(total_400, 2),
+                "dnl_hg_acquisitions": dnl_hg_acquisitions,
+                "dnl_hg_score": dnl_hg_score,
+            }
+
+    def get_performance_level(self, total_400: float) -> str:
+        """Determine performance level based on total /400 score (sum of 8 domains /50)."""
+        if total_400 >= 360:
+            return gettext("Outstanding (Mention Très Bien avec Félicitations)")
+        elif total_400 >= 320:
             return gettext("Excellent (Mention Très Bien possible)")
-        elif socle_score >= 280:
+        elif total_400 >= 280:
             return gettext("Good (Mention Bien possible)")
-        elif socle_score >= 240:
+        elif total_400 >= 240:
             return gettext("Satisfactory (Mention Assez Bien possible)")
-        elif socle_score >= 200:
+        elif total_400 >= 200:
             return gettext("Pass level")
         else:
             return gettext("Below pass level")
@@ -364,7 +501,7 @@ def index():
 
             logger.info(f"Processing login for user: {username} against {analyzer.fixed_url}")
 
-            success, message, evaluations, info = analyzer.connect_and_fetch(username, password)
+            success, message, evaluations, info, evaluations_raw = analyzer.connect_and_fetch(username, password)
             if not success:
                 logger.info(f"Connection attempt failed for user {username}: {message}")
                 flash(gettext("Connection failed: %(message)s", message=message), "error")
@@ -379,9 +516,9 @@ def index():
             )
 
             subject_averages = analyzer.calculate_subject_averages(evaluations_sorted)
-            brevet_stats = analyzer.compute_brevet_stats(evaluations_sorted)
-            performance_level = analyzer.get_performance_level(brevet_stats["socle_sur_400"])
-            logger.info(f"Computed stats: {len(evaluations_sorted)} evaluations, moyenne_sur_20={brevet_stats.get('moyenne_sur_20')}")
+            brevet_stats = analyzer.compute_brevet_stats(evaluations_raw)
+            performance_level = analyzer.get_performance_level(brevet_stats.get("total_400", 0))
+            logger.info(f"Computed stats: {len(evaluations_sorted)} evaluations, total_400={brevet_stats.get('total_400')}")
 
             STORE[session["sid"]] = {
                 "evaluations": evaluations_sorted,
@@ -464,7 +601,7 @@ def auto_login():
     # NOTE: the client provides a SHA256(password) and we forward that string as the password to Pronotepy.
     # This keeps no plaintext stored on the server. If the remote service requires the raw password this
     # may fail and we'll return an error to the client which will clear its local storage.
-    success, message, evaluations, info = analyzer.connect_and_fetch(username, password_sha256)
+    success, message, evaluations, info, evaluations_raw = analyzer.connect_and_fetch(username, password_sha256)
     if not success:
         logger.info(f"Auto-login failed for user {username}: {message}")
         return jsonify({"error": message}), 401
@@ -476,8 +613,8 @@ def auto_login():
     )
 
     subject_averages = analyzer.calculate_subject_averages(evaluations_sorted)
-    brevet_stats = analyzer.compute_brevet_stats(evaluations_sorted)
-    performance_level = analyzer.get_performance_level(brevet_stats["socle_sur_400"])
+    brevet_stats = analyzer.compute_brevet_stats(evaluations_raw)
+    performance_level = analyzer.get_performance_level(brevet_stats.get("total_400", 0))
 
     STORE[session["sid"]] = {
         "evaluations": evaluations_sorted,
@@ -527,16 +664,20 @@ def export_pdf():
         return redirect(url_for("index"))
 
     data = STORE[sid]
+    brevet_stats = data.get("brevet_stats", {})
 
-    # Build subjects list from subject averages ONLY, sorted alphabetically by subject name
+    # Build subjects list from domain_scores (only official domains, not EMPTY)
     subjects = []
-    subject_averages = data.get("subject_averages", {}) or {}
-    for name in sorted(subject_averages.keys(), key=lambda s: s.lower()):
-        avg = float(subject_averages.get(name, 0) or 0)
+    domain_scores = brevet_stats.get("domain_scores", {}) or {}
+    for domain_name in sorted([d for d in domain_scores.keys() if d != 'EMPTY']):
+        score_data = domain_scores[domain_name]
         subjects.append({
-            "name": name,
-            "score": round(avg, 2),
+            "name": domain_name,
+            "score_50": score_data.get("avg_points_50", 0),
+            "score_20": score_data.get("avg_points_20", 0),
         })
+
+    performance_level = data.get("performance_level", gettext("Unknown"))
 
     logger.info(f"Generating PDF for sid={sid}, student={data.get('student_name')}")
     rendered = render_template(
@@ -546,8 +687,8 @@ def export_pdf():
         class_name=data.get("class_name", "-"),
         date=data.get("date", ""),
         subjects=subjects,
-        average_20=data.get("brevet_stats", {}).get("moyenne_sur_20", 0),
-        socle_400=data.get("brevet_stats", {}).get("socle_sur_400", 0),
+        total_400=brevet_stats.get("total_400", 0),
+        performance_level=performance_level,
         )
     # --- Patch : ne pas passer target=pdf_io, récupérer les bytes directement ---
     pdf_bytes = HTML(string=rendered, base_url=request.url_root).write_pdf()  # retourne les bytes

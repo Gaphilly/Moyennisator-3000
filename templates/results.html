@@ -10,103 +10,182 @@
     </a>
 </div>
 
-<!-- Main results content (no tabs) -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card mb-4">
-                    <div class="card-header text-center">
-                        <h2><i class="fas fa-chart-line me-2"></i>{{ _('Grade Analysis Results') }}</h2>
-                        <p class="mb-0">{{ _('Complete analysis of your academic performance') }}</p>
-                        <div class="mt-3">
+<!-- Main results content with tabs -->
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2><i class="fas fa-chart-line me-2"></i>{{ _('Grade Analysis Results') }}</h2>
+                <p class="mb-3">{{ _('Complete analysis of your academic performance') }}</p>
+                
+                <!-- Tabs Navigation -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">
+                            <i class="fas fa-summary me-2"></i>{{ _('Overview') }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="individual-tab" data-bs-toggle="tab" data-bs-target="#individual" type="button" role="tab" aria-controls="individual" aria-selected="false">
+                            <i class="fas fa-book me-2"></i>{{ _('Individual Domains') }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="evaluations-tab" data-bs-toggle="tab" data-bs-target="#evaluations" type="button" role="tab" aria-controls="evaluations" aria-selected="false">
+                            <i class="fas fa-list-alt me-2"></i>{{ _('All Evaluations') }}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Overview Tab: 8 Official DNB Domains -->
+                <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                    <div class="card-body">
+                        <!-- Overall Score -->
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3">
+                                <div class="stats-card">
+                                    <h3>{{ brevet_stats.total_400 }} / 400</h3>
+                                    <p>{{ _('Total DNB Score') }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="stats-card performance">
+                                    <h3><i class="fas fa-medal me-2"></i>{{ performance_level }}</h3>
+                                    <p>{{ _('Performance Level') }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Domain Grid (8 official domains) -->
+                        <div class="row">
+                            {% for domain in (brevet_stats.domain_scores.keys() | list | sort) %}
+                                {% if domain != 'EMPTY' %}
+                                {% set score = brevet_stats.domain_scores[domain] %}
+                                <div class="col-md-6 col-lg-3 mb-3">
+                                    <div class="domain-card">
+                                        <div class="domain-header">
+                                            <h5>{{ domain }}</h5>
+                                        </div>
+                                        <div class="domain-body">
+                                            <div class="score-display">
+                                                <div class="score-large">{{ score.avg_points_50 }}/50</div>
+                                                <div class="score-small">{{ score.avg_points_20 }}/20</div>
+                                            </div>
+                                            <div class="score-bar">
+                                                <div class="progress" style="height: 6px;">
+                                                    <div class="progress-bar" role="progressbar" 
+                                                         style="width: {{ (score.avg_points_50 / 50 * 100) }}%"
+                                                         aria-valuenow="{{ score.avg_points_50 }}" 
+                                                         aria-valuemin="0" 
+                                                         aria-valuemax="50">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <!-- PDF Export Button -->
+                        <div class="text-center mt-4">
                             <a class="btn btn-outline-light" target="_blank" href="{{ url_for('export_pdf') }}">
                                 <i class="fas fa-file-pdf me-2"></i>{{ _('Export PDF') }}
                             </a>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Brevet Statistics Overview -->
-        <div class="row mb-4">
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="stats-card">
-                    <h3>{{ brevet_stats.moyenne_points }}</h3>
-                    <p>{{ _('Average Points (/50)') }}</p>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="stats-card">
-                    <h3>{{ brevet_stats.moyenne_sur_20 }}</h3>
-                    <p>{{ _('Average (/20)') }}</p>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="stats-card">
-                    <h3>{{ brevet_stats.socle_sur_400 }}</h3>
-                    <p>{{ _('Socle Score (/400)') }}</p>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="stats-card">
-                    <h3>{{ total_evaluations }}</h3>
-                    <p>{{ _('Total Evaluations') }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Performance Level -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card performance-{% if brevet_stats.socle_sur_400 >= 350 %}excellent{% elif brevet_stats.socle_sur_400 >= 280 %}good{% elif brevet_stats.socle_sur_400 >= 240 %}satisfactory{% elif brevet_stats.socle_sur_400 >= 200 %}pass{% else %}below{% endif %}">
-                    <div class="card-body text-center">
-                        <h3><i class="fas fa-medal me-2"></i>{{ _('Performance Level') }}</h3>
-                        <h2>{{ performance_level }}</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Subject Averages -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4><i class="fas fa-book me-2"></i>{{ _('Subject Averages (Weighted)') }}</h4>
-                    </div>
+                <!-- Individual Domains Tab -->
+                <div class="tab-pane fade" id="individual" role="tabpanel" aria-labelledby="individual-tab">
                     <div class="card-body">
-                        <div class="row">
-                            {% for subject, average in subject_averages.items() %}
-                                <div class="col-md-6 col-lg-4 mb-3">
-                                    <div class="subject-card">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <strong>{{ subject }}</strong>
-                                            <span class="badge bg-primary fs-6">{{ average }} /20</span>
-                                        </div>
-                                        <div class="progress mt-2" style="height: 8px;">
-                                            <div class="progress-bar" role="progressbar" 
-                                                 style="width: {{ (average / 20 * 100) }}%"
-                                                 aria-valuenow="{{ average }}" 
-                                                 aria-valuemin="0" 
-                                                 aria-valuemax="20">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-book me-1"></i>{{ _('Domain') }}</th>
+                                        <th><i class="fas fa-calculator me-1"></i>{{ _('Score /50') }}</th>
+                                        <th><i class="fas fa-calculator me-1"></i>{{ _('Score /20') }}</th>
+                                        <th><i class="fas fa-list me-1"></i>{{ _('Evaluations') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for domain in (brevet_stats.domain_scores.keys() | list) | sort %}
+                                        {% if domain != 'EMPTY' %}
+                                            {% set score = brevet_stats.domain_scores[domain] %}
+                                            <tr>
+                                                <td><strong>{{ domain }}</strong></td>
+                                                <td><strong>{{ score.avg_points_50 }}/50</strong></td>
+                                                <td><strong>{{ score.avg_points_20 }}/20</strong></td>
+                                                <td><span class="badge bg-secondary">{{ score.count }}</span></td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- DNL (Empty Pillar Prefix) Acquisitions Section -->
+                            <!-- DNL HG (Languages) Acquisitions Section -->
+                            {% if brevet_stats.dnl_hg_score %}
+                                <div class="mt-4">
+                                    <h4><i class="fas fa-globe me-2"></i>{{ _('DNL HG (Languages / History-Geography)') }}</h4>
+                                    <p class="text-muted">{{ _('This DNL HG score does not count towards the total DNB score.') }}</p>
+
+                                    <div class="row">
+                                        <div class="col-md-3 col-sm-6 mb-3">
+                                            <div class="domain-card">
+                                                <div class="domain-header">
+                                                    <h5>{{ _('DNL HG') }}</h5>
+                                                </div>
+                                                <div class="domain-body">
+                                                    <div class="score-display">
+                                                        <div class="score-large">{{ brevet_stats.dnl_hg_score.avg_points_50 }}/50</div>
+                                                        <div class="score-small">{{ brevet_stats.dnl_hg_score.avg_points_20 }}/20</div>
+                                                    </div>
+                                                    <div class="text-muted">{{ _('Palier:') }} <strong>{{ brevet_stats.dnl_hg_score.palier }}</strong></div>
+                                                    <div class="text-muted">{{ _('Raw avg:') }} {{ brevet_stats.dnl_hg_score.raw_avg }}</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            {% endfor %}
+                            {% endif %}
+
+                        <!-- Subject Averages Summary -->
+                        <div class="mt-4">
+                            <h4><i class="fas fa-chart-bar me-2"></i>{{ _('Subject Averages') }}</h4>
+                            <div class="row">
+                                {% for subject, avg_20 in subject_averages.items() | sort %}
+                                    <div class="col-md-6 col-lg-3 mb-3">
+                                        <div class="subject-avg-card">
+                                            <div class="subject-name">{{ subject }}</div>
+                                            <div class="subject-score">
+                                                <span class="score-value">{{ avg_20 }}</span>
+                                                <span class="score-scale">/20</span>
+                                            </div>
+                                            <div class="progress" style="height: 6px;">
+                                                <div class="progress-bar" role="progressbar" 
+                                                     style="width: {{ (avg_20 / 20 * 100) }}%"
+                                                     aria-valuenow="{{ avg_20 }}" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="20">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Individual Evaluations -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4><i class="fas fa-list-alt me-2"></i>{{ _('Individual Evaluations') }}</h4>
-                    </div>
+                <!-- All Evaluations Tab -->
+                <div class="tab-pane fade" id="evaluations" role="tabpanel" aria-labelledby="evaluations-tab">
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-hover">
@@ -117,7 +196,7 @@
                                         <th><i class="fas fa-calendar me-1"></i>{{ _('Date') }}</th>
                                         <th><i class="fas fa-weight me-1"></i>{{ _('Coefficient') }}</th>
                                         <th><i class="fas fa-star me-1"></i>{{ _('Grades') }}</th>
-                                        <th><i class="fas fa-calculator me-1"></i>{{ _('Avg Points (/20)') }}</th>
+                                        <th><i class="fas fa-calculator me-1"></i>{{ _('Avg Points (/50)') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -149,7 +228,7 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                <strong>{{ (evaluation.average_points * 0.4) | round(2) }}/20</strong>
+                                                <strong>{{ evaluation.average_points }}/50</strong>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -160,40 +239,36 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- Footer with additional info -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h6><i class="fas fa-info-circle me-2"></i>{{ _('Grade Point System') }}</h6>
-                        <p class="mb-0">
-                            <span class="grade-badge grade-v-plus">V+ = 50 pts</span>
-                            <span class="grade-badge grade-v">V = 40 pts</span>
-                            <span class="grade-badge grade-j">J = 25 pts</span>
-                            <span class="grade-badge grade-r">R = 10 pts</span>
-                        </p>
-                    </div>
-                </div>
+<!-- Grade Point System Legend -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <h6><i class="fas fa-info-circle me-2"></i>{{ _('Grade Point System') }}</h6>
+                <p class="mb-0">
+                    <span class="grade-badge grade-v-plus">V+ / TBM = 50 pts</span>
+                    <span class="grade-badge grade-v">V / MS = 40 pts</span>
+                    <span class="grade-badge grade-j">J / MF = 25 pts</span>
+                    <span class="grade-badge grade-r">R / MI = 10 pts</span>
+                </p>
             </div>
         </div>
-        <!-- ===== End main content ===== -->
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
-<!-- No graphs or Chart.js scripts -->
+<!-- Bootstrap tabs are handled by Bootstrap JS in base.html -->
 {% endblock %}
 
 {% block styles %}
 <style>
-    /* Custom tab styling */
-    .tabs-wrapper {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        margin-bottom: 1rem;
-    }
-
+    /* Tab styling */
     .nav-tabs {
-        border-bottom: none;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
     }
 
     .nav-tabs .nav-link {
@@ -208,38 +283,147 @@
     .nav-tabs .nav-link:hover {
         color: #fff;
         background: rgba(255, 255, 255, 0.1);
-        border: none;
     }
 
     .nav-tabs .nav-link.active {
         color: #fff;
         background: rgba(255, 255, 255, 0.15);
         border: none;
+        border-bottom: 2px solid #4dc9f6;
         position: relative;
+        margin-bottom: -2px;
     }
 
-    .nav-tabs .nav-link.active::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: #fff;
-    }
-
-    /* Ensure proper spacing between sections */
     .tab-content {
-        padding-top: 1rem;
+        padding-top: 1.5rem;
     }
 
-    /* Back button improvements */
+    /* Domain card styling */
+    .domain-card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.2s ease;
+    }
+
+    .domain-card:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .domain-header h5 {
+        font-weight: 600;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+    }
+
+    .score-display {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .score-large {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #4dc9f6;
+    }
+
+    .score-small {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Subject average card styling */
+    .subject-avg-card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.2s ease;
+    }
+
+    .subject-avg-card:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .subject-name {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.5rem;
+        text-transform: capitalize;
+    }
+
+    .subject-score {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .score-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #4dc9f6;
+    }
+
+    .score-scale {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-left: 0.25rem;
+    }
+
+    /* Stats card styling */
+    .stats-card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .stats-card h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #4dc9f6;
+    }
+
+    .stats-card p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+    }
+
+    .stats-card.performance {
+        background: linear-gradient(135deg, rgba(45, 212, 191, 0.1) 0%, rgba(77, 201, 246, 0.1) 100%);
+        border-color: rgba(77, 201, 246, 0.3);
+    }
+
+    .stats-card.performance h3 {
+        color: #10b981;
+    }
+
+    /* Back button */
     .back-btn {
         transition: all 0.2s ease;
     }
 
     .back-btn:hover {
         transform: translateX(-3px);
+    }
+
+    /* Progress bar colors */
+    .progress-bar {
+        background: linear-gradient(90deg, #4dc9f6, #10b981) !important;
     }
 </style>
 {% endblock %}

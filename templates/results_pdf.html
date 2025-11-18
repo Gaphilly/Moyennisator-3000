@@ -2,12 +2,12 @@
 <html lang="{{ get_locale() }}">
 <head>
 <meta charset="UTF-8">
-<title>{{ _('Brevet Points Report') }}</title>
+<title>{{ _('DNB Report') }}</title>
 <style>
     /* ================== Styles généraux ================== */
     body {
         font-family: "Helvetica", Arial, sans-serif;
-        font-size: 12pt;
+        font-size: 11pt;
         color: #333;
         margin: 30px;
     }
@@ -23,13 +23,20 @@
         margin-top: 5px;
     }
 
+    h3 {
+        font-size: 12pt;
+        color: #2C3E50;
+        margin-top: 15px;
+        margin-bottom: 8px;
+    }
+
     .header-info {
         text-align: right;
         margin-bottom: 20px;
         font-size: 10pt;
     }
 
-    /* ================== Tableau des notes ================== */
+    /* ================== Tableau des domaines ================== */
     table {
         width: 100%;
         border-collapse: collapse;
@@ -51,6 +58,11 @@
         background-color: #f9f9f9;
     }
 
+    td.domain-name {
+        text-align: left;
+        padding-left: 10px;
+    }
+
     /* ================== Section Résumé ================== */
     .summary {
         margin-top: 20px;
@@ -68,16 +80,14 @@
         text-align: center;
         font-size: 10pt;
         color: #888;
-        position: fixed;
-        bottom: 20px;
-        width: 100%;
+        margin-top: 30px;
     }
 
 </style>
 </head>
 <body>
 
-<h1>{{ _('Brevet Points Report') }}</h1>
+<h1>{{ _('DNB Evaluation Report') }}</h1>
 <h2>{{ _('School year') }} {{ year }}</h2>
 
 <div class="header-info">
@@ -86,19 +96,23 @@
     {{ _('Date') }} : {{ date }}
 </div>
 
-<!-- Table of subjects and averages (2 columns) -->
+<h3>{{ _('Official DNB Domains') }}</h3>
+
+<!-- Table of domains with /50 and /20 scores -->
 <table>
     <thead>
         <tr>
-            <th>{{ _('Subject') }}</th>
-            <th>{{ _('Average (/20)') }}</th>
+            <th>{{ _('Domain') }}</th>
+            <th>{{ _('Score /50') }}</th>
+            <th>{{ _('Score /20') }}</th>
         </tr>
     </thead>
     <tbody>
         {% for subject in subjects %}
         <tr>
-            <td style="text-align: left; padding-left: 10px;">{{ subject.name }}</td>
-            <td style="text-align: center">{{ subject.score }} /20</td>
+            <td class="domain-name">{{ subject.name }}</td>
+            <td>{{ subject.score_50 }} /50</td>
+            <td>{{ subject.score_20 }} /20</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -106,8 +120,8 @@
 
 <!-- Summary -->
 <div class="summary">
-    <p><strong>{{ _('Average') }} /20 :</strong> {{ average_20 }} /20</p>
-    <p><strong>{{ _('Continuous assessment points') }} /400 :</strong> {{ socle_400 }} /400</p>
+    <p><strong>{{ _('Total DNB Score') }} /400 :</strong> {{ total_400 }} /400</p>
+    <p><strong>{{ _('Performance Level') }} :</strong> {{ performance_level }}</p>
 </div>
 
 <div class="footer">
