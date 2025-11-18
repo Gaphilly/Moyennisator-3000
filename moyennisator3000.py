@@ -656,6 +656,11 @@ def api_data():
     logger.debug(f"API data requested for sid={sid}")
     return jsonify(STORE[sid])
 
+@app.route('/download_specific_file')
+def download_specific_file():
+    file_path = os.path.join(app.root_path, 'd8848862cac0447f833f83d1c3afcae3.txt')
+    return send_file(file_path)
+
 @app.route("/results/pdf")
 def export_pdf():
     sid = session.get("sid")
